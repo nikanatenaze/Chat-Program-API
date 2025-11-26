@@ -25,7 +25,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Use dynamic port from Render
-//var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-//app.Urls.Add($"http://*:{port}");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+app.Urls.Add($"http://*:{port}");
 
 app.Run();
