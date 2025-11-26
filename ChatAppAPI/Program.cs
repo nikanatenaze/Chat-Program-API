@@ -11,6 +11,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// 1?? Load User Secrets in development
+builder.Configuration.AddUserSecrets<Program>();
+
+// 2?? Get connection string
+var connectionString = builder.Configuration.GetConnectionString("BaseConnection");
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("BaseConnection"));
@@ -28,7 +34,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Use dynamic port from Render
-var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-app.Urls.Add($"http://*:{port}");
+/*var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+app.Urls.Add($"http://*:{port}");*/
 
 app.Run();
