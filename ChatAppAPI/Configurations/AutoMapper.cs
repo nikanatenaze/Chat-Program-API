@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ChatAppAPI.Models;
+using ChatAppAPI.Models.UserDTO;
 
 namespace ChatAppAPI.Configurations
 {
@@ -9,7 +10,8 @@ namespace ChatAppAPI.Configurations
         {
             // User
             CreateMap<User, UserDTO>();
-            CreateMap<ChatCreateDTO, User>();
+            CreateMap<UserCreateDTO, User>();
+            CreateMap<UserUpdateDTO, User>();
 
             // Chat
             CreateMap<Chat, ChatDTO>();

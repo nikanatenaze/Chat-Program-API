@@ -1,5 +1,6 @@
 ﻿using ChatAppAPI.Data;
 using ChatAppAPI.Models;
+using ChatAppAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,11 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IUserReporitory, UserRepository>();
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
+builder.Services.AddScoped<IChatUserRepository, ChatUserRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped(typeof(IChatApiRepository<>), typeof(ChatApiRepository<>));
 
 var app = builder.Build();
 

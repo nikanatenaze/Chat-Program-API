@@ -21,7 +21,7 @@ namespace ChatAppAPI.Repository
             await _dbContext.SaveChangesAsync();
             return dbRecord;
         }
-        public async Task<List<T>> GetAllAsync(T dbRecord)
+        public async Task<List<T>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
         }

@@ -6,7 +6,7 @@ namespace ChatAppAPI.Repository
     {
         Task<T> AddAsync(T dbRecord);
 
-        Task<List<T>> GetAllAsync(T dbRecord);
+        Task<List<T>> GetAllAsync();
 
         Task<bool> RemoveAsync(T dbRecord);
 
