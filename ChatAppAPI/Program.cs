@@ -1,4 +1,5 @@
 ﻿using ChatAppAPI.Data;
+using ChatAppAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,9 @@ var connectionString = builder.Configuration.GetConnectionString("BaseConnection
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(connectionString)
 );
+
+// Add AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

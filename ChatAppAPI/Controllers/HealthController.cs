@@ -7,7 +7,7 @@ namespace ChatAppAPI.Controllers
     [ApiController]
     public class HealthController : ControllerBase
     {
-        [HttpGet]
+        [HttpGet, HttpPost, HttpPut, HttpDelete, HttpHead]
         public IActionResult Get()
         {
             return Ok("Api is running");

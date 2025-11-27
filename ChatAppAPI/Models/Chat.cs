@@ -1,15 +1,18 @@
 ﻿namespace ChatAppAPI.Models
 {
-    public class User
+    public class Chat
     {
         public int Id { get; set; }
+
         public string Name { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public bool HasPassword { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        // Nav
-        public ICollection<Chat> ChatsCreated { get; set; }
+        // FK
+        public int CreatedByUserId { get; set; }
+
+        // Navigation
+        public User CreatedByUser { get; set; }
         public ICollection<ChatUser> ChatUsers { get; set; }
         public ICollection<Message> Messages { get; set; }
     }
