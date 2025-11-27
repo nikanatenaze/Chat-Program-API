@@ -17,7 +17,13 @@ namespace ChatAppAPI.Controllers
             _data = data;
         }
 
-        [HttpGet("id/{id:int}", Name = "GetUserById")]
+        [HttpGet("GetAllUsers", Name = "GetAllUsers")]
+        public IActionResult GetAllUsers() {
+            return null;
+        }
+
+
+        [HttpGet("GetUserById/{id:int}", Name = "GetUserById")]
         public IActionResult GetUserById(int id)
         {
             var found = _data.Users.FirstOrDefault(x => x.Id == id);

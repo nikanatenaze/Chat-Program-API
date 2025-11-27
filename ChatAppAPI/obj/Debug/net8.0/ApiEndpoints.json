@@ -18,9 +18,30 @@
     ]
   },
   {
+    "ContainingType": "ChatAppAPI.Controllers.HealthController",
+    "Method": "Get",
+    "RelativePath": "api/Health",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.UserController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/User/GetAllUsers",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "GetAllUsers"
+  },
+  {
     "ContainingType": "ChatAppAPI.Controllers.UserController",
     "Method": "GetUserById",
-    "RelativePath": "api/User/id/{id}",
+    "RelativePath": "api/User/GetUserById/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
