@@ -3,42 +3,54 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// 1️⃣ Load configuration
 
-// Load User Secrets in development
+// Load user secrets in Development
 if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
 }
 
-// Get connection string BEFORE build
+// Environment variables are automatically loaded in ASP.NET Core
+// Render environment variable example:
+// ConnectionStrings__BaseConnection
+
+// 2️⃣ Add services
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Get connection string
 var connectionString = builder.Configuration.GetConnectionString("BaseConnection");
+
+// Optional: print connection string to verify it's loaded
+Console.WriteLine("CONNECTION STRING: " + connectionString);
+
+// Add DbContext
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(connectionString)
 );
 
 var app = builder.Build();
 
-// Use dynamic port from Render
+// 3️⃣ Configure app URLs for Render
 var port = Environment.GetEnvironmentVariable("PORT");
 if (!app.Environment.IsDevelopment() && port != null)
 {
     app.Urls.Add($"http://*:{port}");
 }
 
-// Swagger
+// 4️⃣ Middleware
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseAuthorization();
 
-// Root test endpoint
+// 5️⃣ Test endpoint
 app.MapGet("/", () => "API is running on Render 🚀");
 
-// Controllers
+// 6️⃣ Controllers
 app.MapControllers();
 
+// 7️⃣ Run the app
 app.Run();
