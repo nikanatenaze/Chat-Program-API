@@ -12,15 +12,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // 1?? Load User Secrets in development
-builder.Configuration.AddUserSecrets<Program>();
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
 
 // 2?? Get connection string
 var connectionString = builder.Configuration.GetConnectionString("BaseConnection");
-
 builder.Services.AddDbContext<DataContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BaseConnection"));
-});
+    options.UseSqlServer(connectionString)
+);
+
 
 var app = builder.Build();
 
