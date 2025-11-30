@@ -18,6 +18,169 @@
     ]
   },
   {
+    "ContainingType": "ChatAppAPI.Controllers.ChatController",
+    "Method": "CreateChat",
+    "RelativePath": "api/Chat/Create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "create",
+        "Type": "ChatAppAPI.Models.ChatCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "CreateChat"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.ChatController",
+    "Method": "Delete",
+    "RelativePath": "api/Chat/DeleteById/{Id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "DeleteChat"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.ChatController",
+    "Method": "GetAllChats",
+    "RelativePath": "api/Chat/GetAll",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "GetAllChats"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.ChatController",
+    "Method": "GetChatById",
+    "RelativePath": "api/Chat/GetById/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "GetChatById"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.ChatController",
+    "Method": "Update",
+    "RelativePath": "api/Chat/Update",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "ChatAppAPI.Models.ChatUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "UpdateChat"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.ChatUserController",
+    "Method": "AddChatUser",
+    "RelativePath": "api/ChatUser/AddChatUser",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "item",
+        "Type": "ChatAppAPI.Models.ChatUserDTO.ChatUserDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "AddChatUser"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.ChatUserController",
+    "Method": "GetAllChatUsers",
+    "RelativePath": "api/ChatUser/GetAllData",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "GetAllChatUsers"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.ChatUserController",
+    "Method": "GetChatsOfUser",
+    "RelativePath": "api/ChatUser/GetChatsOfUser/{Id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "GetChatsOfUser"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.ChatUserController",
+    "Method": "GetUsersInChat",
+    "RelativePath": "api/ChatUser/GetUsersInChat/{Id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "chatId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Id",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "GetUsersInChat"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.ChatUserController",
+    "Method": "RemoveChatUser",
+    "RelativePath": "api/ChatUser/RemoveFromChat",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "item",
+        "Type": "ChatAppAPI.Models.ChatUserDTO.ChatUserDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "RemoveChatUser"
+  },
+  {
     "ContainingType": "ChatAppAPI.Controllers.HealthController",
     "Method": "Get",
     "RelativePath": "api/Health",

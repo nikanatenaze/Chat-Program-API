@@ -12,7 +12,6 @@ namespace ChatAppAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly DataContext _data;
         private readonly ILogger<UserController> _logger;
         private readonly IUserReporitory _repository;
         private readonly IMapper _mapper;
@@ -20,7 +19,6 @@ namespace ChatAppAPI.Controllers
         public UserController(ILogger<UserController> logger, DataContext data, IUserReporitory repo, IMapper mapper)
         {
             _logger = logger;
-            _data = data;
             _repository = repo;
             _mapper = mapper;
         }
@@ -84,7 +82,7 @@ namespace ChatAppAPI.Controllers
             if(user == null) return BadRequest();
             var User = await _repository.GetAsync(x => x.Id == user.Id);
             if (User == null) {
-                return Unauthorized("Cant find user");
+                return NotFound("Cant find user");
             }
             var dto = _mapper.Map<User>(user);
             var result = await _repository.UpdateAsync(dto);

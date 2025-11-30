@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using ChatAppAPI.Models;
+using ChatAppAPI.Models.MessageDTO;
 using ChatAppAPI.Models.UserDTO;
+using ChatAppAPI.Models.ChatUserDTO;
 
 namespace ChatAppAPI.Configurations
 {
@@ -12,10 +14,18 @@ namespace ChatAppAPI.Configurations
             CreateMap<User, UserDTO>();
             CreateMap<UserCreateDTO, User>();
             CreateMap<UserUpdateDTO, User>();
+                
 
             // Chat
             CreateMap<Chat, ChatDTO>();
             CreateMap<ChatCreateDTO, Chat>();
+            CreateMap<ChatUpdateDTO, Chat>()
+                .ForMember(dest => dest.CreatedByUserId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
+
+            // ChatUser
+            CreateMap<ChatUserDTO, ChatUser>();
+            CreateMap<ChatUser, ChatUserDTO>();
 
             // Message
             CreateMap<Message, MessageDTO>();

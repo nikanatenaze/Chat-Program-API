@@ -1,4 +1,4 @@
-﻿namespace ChatAppAPI.Models
+﻿namespace ChatAppAPI.Models.MessageDTO
 {
     public class MessageDTO
     {

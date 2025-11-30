@@ -20,6 +20,7 @@ namespace ChatAppAPI.Data.Cunfigurations
             builder.Property(x => x.HasPassword)
                 .HasDefaultValue(false);
 
+            builder.Property(x => x.Password).HasMaxLength(50);
 
             builder.Property(x => x.CreatedAt)
                 .HasDefaultValueSql("GETUTCDATE()");

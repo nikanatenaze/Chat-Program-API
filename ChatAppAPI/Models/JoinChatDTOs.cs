@@ -1,6 +1,6 @@
 ﻿namespace ChatAppAPI.Models
 {
-    public class JoinChatDTO
+    public class JoinChatDTOs
     {
         public int ChatId { get; set; }
         public int UserId { get; set; }
