@@ -32,6 +32,17 @@ builder.Services.AddScoped<IChatUserRepository, ChatUserRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped(typeof(IChatApiRepository<>), typeof(ChatApiRepository<>));
 
+// Swagger settings
+builder.Services.AddSwaggerGen(c =>
+{
+    c.TagActionsBy(api =>
+    {
+        return new[] { api.GroupName ?? api.ActionDescriptor.RouteValues["controller"] };
+    });
+
+    c.DocInclusionPredicate((_, _) => true);
+});
+
 var app = builder.Build();
 
 // 3️⃣ Configure app URLs for Render

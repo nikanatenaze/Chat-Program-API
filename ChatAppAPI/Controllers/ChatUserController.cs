@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChatAppAPI.Controllers
 {
+    [ApiExplorerSettings(GroupName = "3-ChatUsersController")]
     [Route("api/[controller]")]
     [ApiController]
     public class ChatUserController : ControllerBase
