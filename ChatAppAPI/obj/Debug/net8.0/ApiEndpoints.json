@@ -19,6 +19,23 @@
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.ChatController",
+    "Method": "LoginInChat",
+    "RelativePath": "api/Chat/ChatVerification",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "ChatAppAPI.Models.ChatLoginDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "LoginInChat"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.ChatController",
     "Method": "CreateChat",
     "RelativePath": "api/Chat/Create",
     "HttpMethod": "POST",
@@ -95,6 +112,27 @@
     ],
     "ReturnTypes": [],
     "EndpointName": "UpdateChat"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.ChatUserController",
+    "Method": "IsMember",
+    "RelativePath": "api/ChatUser/{chatId}/isMember/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "chatId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.ChatUserController",

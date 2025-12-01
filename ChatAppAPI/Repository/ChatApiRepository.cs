@@ -17,13 +17,18 @@ namespace ChatAppAPI.Repository
 
         public async Task<T> AddAsync(T dbRecord)
         {
-            _dbSet.AddAsync(dbRecord);
+            await _dbSet.AddAsync(dbRecord);
             await _dbContext.SaveChangesAsync();
             return dbRecord;
         }
         public async Task<List<T>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
+        }
+
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> arguments)
+        {
+            return await _dbSet.Where(arguments).ToListAsync();
         }
 
         public async Task<bool> RemoveAsync(T dbRecord)

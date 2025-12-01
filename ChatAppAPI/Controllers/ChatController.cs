@@ -61,6 +61,16 @@ namespace ChatAppAPI.Controllers
             return Ok(chat);
         }
 
+        [HttpPost("ChatVerification", Name = "LoginInChat")]
+        public async Task<IActionResult> LoginInChat([FromBody] ChatLoginDTO dto)
+        {
+            var chat = await _repository.GetAsync(x => x.Id == dto.ChatId);
+            if(chat == null) return Unauthorized("cant find chat");
+            if(!chat.HasPassword) return BadRequest("chat has no password");
+            if(chat.Password != dto.Password) return Unauthorized("wrong password");
+            return Ok(chat);
+        }
+
         [HttpPatch("Update", Name = "UpdateChat")]
         public async Task<IActionResult> Update([FromBody] ChatUpdateDTO dto)
         {

@@ -13,18 +13,18 @@ namespace ChatAppAPI.Controllers
     [ApiController]
     public class ChatUserController : ControllerBase
     {
-        private readonly ILogger<ChatController> _logger;
+        private readonly ILogger<ChatUserController> _logger;
         private readonly IChatUserRepository _repository;
-        private readonly IUserReporitory _userReporitory;
+        private readonly IUserReporitory _userRepository;
         private readonly IChatRepository _chatRepository;
         private readonly IMapper _mapper;
 
-        public ChatUserController(ILogger<ChatController> logger, DataContext data, IChatUserRepository repo, IUserReporitory userReporitory, IChatRepository chatRepository, IMapper mapper)
+        public ChatUserController(ILogger<ChatUserController> logger, IChatUserRepository repo, IUserReporitory userRepository, IChatRepository chatRepository, IMapper mapper)
         {
             _logger = logger;
             _repository = repo;
             _mapper = mapper;
-            _userReporitory = userReporitory;
+            _userRepository = userRepository;
             _chatRepository = chatRepository;
         }
 
@@ -36,56 +36,49 @@ namespace ChatAppAPI.Controllers
         }
 
         [HttpGet("GetUsersInChat/{Id:int}", Name = "GetUsersInChat")]
-        public async Task<IActionResult> GetUsersInChat(int chatId)
+        public async Task<IActionResult> GetUsersInChat(int Id)
         {
-            var some = await _repository.GetAllAsync();
-            var ids = some.Where(x => x.ChatId == chatId);
-            var usersList = new List<User>();
-            foreach (var i in ids) { 
-                var user = await _userReporitory.GetAsync(x => x.Id == i.UserId);
-                if (user != null) {
-                    usersList.Add(user);
-                }
-            }
-            var result = _mapper.Map<List<UserDTO>>(usersList); 
+            var ids = await _repository.GetAllAsync(x => x.ChatId == Id);
+            var userIds = ids.Select(x => x.UserId).ToList();
+            var users = await _userRepository.GetAllAsync(x => userIds.Contains(x.Id));
+            var result = _mapper.Map<List<UserDTO>>(users);
             return Ok(result);
         }
 
         [HttpGet("GetChatsOfUser/{Id:int}", Name = "GetChatsOfUser")]
         public async Task<IActionResult> GetChatsOfUser(int Id)
         {
-            var some = await _repository.GetAllAsync();
-            var ids = some.Where(x => x.UserId == Id);
-            var chatsList = new List<Chat>();
-            foreach (var i in ids)
-            {
-                var chat = await _chatRepository.GetAsync(x => x.Id == i.ChatId);
-                if (chat != null)
-                {
-                    chatsList.Add(chat);
-                }
-            }
-            var result = _mapper.Map<List<ChatDTO>>(chatsList);
+            var ids = await _repository.GetAllAsync(x => x.UserId == Id);
+            var chatIds = ids.Select(x => x.ChatId).ToList();
+            var chats = await _chatRepository.GetAllAsync(x => chatIds.Contains(x.Id));
+            var result = _mapper.Map<List<ChatDTO>>(chats);
             return Ok(result);
+        }
+
+        [HttpGet("{chatId:int}/isMember/{userId:int}")]
+        public async Task<IActionResult> IsMember(int chatId, int userId)
+        {
+            var chatUser = await _repository.GetAsync(x => x.ChatId == chatId && x.UserId == userId);
+            return Ok(chatUser != null);
         }
 
         [HttpPost("AddChatUser", Name = "AddChatUser")]
         public async Task<IActionResult> AddChatUser([FromBody] ChatUserDTO item)
         {
-            var user = await _userReporitory.GetAsync(x => x.Id == item.UserId);
+            var user = await _userRepository.GetAsync(x => x.Id == item.UserId);
             if (user == null) return NotFound("Can't find user");
             var chat = await _chatRepository.GetAsync(x => x.Id == item.ChatId);
             if (chat == null) return NotFound("Can't find chat");
             var exits = await _repository.GetAsync(x => x.UserId == item.UserId && x.ChatId == item.ChatId);
             if (exits != null) return BadRequest("ChatUser already exits");
             var resp = await _repository.AddAsync(new ChatUser { ChatId = item.ChatId, UserId = item.UserId, JoinedAt = DateTime.UtcNow});
-            return Ok(resp);
+            return Ok(_mapper.Map<ChatUserDTO>(resp));
         }
 
         [HttpDelete("RemoveFromChat", Name = "RemoveChatUser")]
         public async Task<IActionResult> RemoveChatUser([FromBody] ChatUserDTO item)
         {
-            var user = await _userReporitory.GetAsync(x => x.Id == item.UserId);
+            var user = await _userRepository.GetAsync(x => x.Id == item.UserId);
             if (user == null) return NotFound("Can't find user");
             var chat = await _chatRepository.GetAsync(x => x.Id == item.ChatId);
             if (chat == null) return NotFound("Can't find chat");
