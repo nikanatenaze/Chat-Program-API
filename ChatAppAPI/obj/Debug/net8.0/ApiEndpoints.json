@@ -1,7 +1,7 @@
 [
   {
     "ContainingType": "Program\u002B\u003C\u003Ec",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__0_2",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__0_4",
     "RelativePath": "",
     "HttpMethod": "GET",
     "IsController": false,
@@ -16,6 +16,22 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "ChatAppAPI.Controllers.LoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.ChatController",
@@ -154,7 +170,7 @@
   {
     "ContainingType": "ChatAppAPI.Controllers.ChatUserController",
     "Method": "GetAllChatUsers",
-    "RelativePath": "api/ChatUser/GetAllData",
+    "RelativePath": "api/ChatUser/GetAll",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -283,14 +299,14 @@
   {
     "ContainingType": "ChatAppAPI.Controllers.MessageController",
     "Method": "RemoveMessage",
-    "RelativePath": "api/Message/Delete/{id}",
+    "RelativePath": "api/Message/Delete",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Int32",
+        "Name": "dto",
+        "Type": "ChatAppAPI.Models.MessageDTO.MessageDeleteDTO",
         "IsRequired": true
       }
     ],
@@ -328,7 +344,7 @@
   {
     "ContainingType": "ChatAppAPI.Controllers.MessageController",
     "Method": "GetMessageById",
-    "RelativePath": "api/Message/GetById{Id}",
+    "RelativePath": "api/Message/GetById/{Id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

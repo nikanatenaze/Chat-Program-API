@@ -30,7 +30,7 @@ namespace ChatAppAPI.Controllers
             _chatRepository = chatRepository;
         }
 
-        [HttpGet("GetAllData", Name = "GetAllChatUsers")]
+        [HttpGet("GetAll", Name = "GetAllChatUsers")]
         public async Task<IActionResult> GetAllChatUsers()
         {
             var result = await _repository.GetAllAsync();

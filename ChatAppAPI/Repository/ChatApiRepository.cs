@@ -6,8 +6,8 @@ namespace ChatAppAPI.Repository
 {
     public class ChatApiRepository<T> : IChatApiRepository<T> where T : class
     {
-        private readonly DataContext _dbContext;
-        private DbSet<T> _dbSet;
+        protected readonly DataContext _dbContext;
+        protected DbSet<T> _dbSet;
 
         public ChatApiRepository(DataContext dbContext)
         {

@@ -1,9 +1,8 @@
 ﻿namespace ChatAppAPI.Models.MessageDTO
 {
-    public class MessageUpdateDTO
+    public class MessageDeleteDTO
     {
         public int Id { get; set; }
-        public string Content { get; set; }
         public int UserId { get; set; }
     }
 }
