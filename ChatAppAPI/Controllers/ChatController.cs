@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ChatAppAPI.Data;
 using ChatAppAPI.Models;
+using ChatAppAPI.Models.ChatDTO;
 using ChatAppAPI.Models.UserDTO;
 using ChatAppAPI.Repository;
 using Microsoft.AspNetCore.Http;

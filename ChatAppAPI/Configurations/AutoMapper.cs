@@ -3,6 +3,7 @@ using ChatAppAPI.Models;
 using ChatAppAPI.Models.MessageDTO;
 using ChatAppAPI.Models.UserDTO;
 using ChatAppAPI.Models.ChatUserDTO;
+using ChatAppAPI.Models.ChatDTO;
 
 namespace ChatAppAPI.Configurations
 {
@@ -29,7 +30,8 @@ namespace ChatAppAPI.Configurations
 
             // Message
             CreateMap<Message, MessageDTO>();
-            CreateMap<ChatCreateDTO, Message>();
+            CreateMap<MessageCreateDTO, Message>();
+            CreateMap<MessageUpdateDTO, Message>();
         }
     }
 }

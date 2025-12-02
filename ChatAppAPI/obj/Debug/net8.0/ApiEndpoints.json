@@ -27,7 +27,7 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "ChatAppAPI.Models.ChatLoginDTO",
+        "Type": "ChatAppAPI.Models.ChatDTO.ChatLoginDTO",
         "IsRequired": true
       }
     ],
@@ -44,7 +44,7 @@
     "Parameters": [
       {
         "Name": "create",
-        "Type": "ChatAppAPI.Models.ChatCreateDTO",
+        "Type": "ChatAppAPI.Models.ChatDTO.ChatCreateDTO",
         "IsRequired": true
       }
     ],
@@ -106,7 +106,7 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "ChatAppAPI.Models.ChatUpdateDTO",
+        "Type": "ChatAppAPI.Models.ChatDTO.ChatUpdateDTO",
         "IsRequired": true
       }
     ],
@@ -262,6 +262,85 @@
     "Order": 0,
     "Parameters": [],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.MessageController",
+    "Method": "CreateMessage",
+    "RelativePath": "api/Message/Create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "ChatAppAPI.Models.MessageDTO.MessageCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "CreateMessage"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.MessageController",
+    "Method": "RemoveMessage",
+    "RelativePath": "api/Message/Delete/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "DeleteMessage"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.MessageController",
+    "Method": "EditMessage",
+    "RelativePath": "api/Message/Edit",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "ChatAppAPI.Models.MessageDTO.MessageUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "EditMessage"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.MessageController",
+    "Method": "GetAllMessages",
+    "RelativePath": "api/Message/GetAll",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "GetAllMessages"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.MessageController",
+    "Method": "GetMessageById",
+    "RelativePath": "api/Message/GetById{Id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "GetMessageById"
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.UserController",
