@@ -4,6 +4,7 @@ using ChatAppAPI.Models.MessageDTO;
 using ChatAppAPI.Models.UserDTO;
 using ChatAppAPI.Models.ChatUserDTO;
 using ChatAppAPI.Models.ChatDTO;
+using ChatAppAPI.Models.AuthDTO;
 
 namespace ChatAppAPI.Configurations
 {
@@ -15,6 +16,7 @@ namespace ChatAppAPI.Configurations
             CreateMap<User, UserDTO>();
             CreateMap<UserCreateDTO, User>();
             CreateMap<UserUpdateDTO, User>();
+            CreateMap<RegisterRequest, User>();
                 
 
             // Chat

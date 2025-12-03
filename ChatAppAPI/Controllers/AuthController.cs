@@ -1,6 +1,14 @@
-﻿using ChatAppAPI.Services;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using ChatAppAPI.Data;
+using ChatAppAPI.Models;
+using ChatAppAPI.Models.AuthDTO;
+using ChatAppAPI.Models.AuthModels;
+using ChatAppAPI.Models.UserDTO;
+using ChatAppAPI.Repository;
+using ChatAppAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatAppAPI.Controllers
 {
@@ -8,29 +16,41 @@ namespace ChatAppAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly IMapper _mapper;
+        private readonly IUserReporitory _repository;
         private readonly JwtService _jwt;
 
-        public AuthController(JwtService jwt)
+        public AuthController(IMapper mapper,IUserReporitory reporitory, JwtService jwt)
         {
+            _mapper=mapper;
+            _repository = reporitory;
             _jwt = jwt;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest model)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
-            // TODO: Validate user existence from DB
-            if (model.Username != "test" || model.Password != "1234")
-                return Unauthorized("Invalid credentials");
+            var user = await _repository.GetAsync(x => x.Email == request.Email);
 
-            var token = _jwt.GenerateToken("1", model.Username);
+            if (user == null) return Unauthorized("User not found");
+            if (user.Password != request.Password) return Unauthorized("Invalid password");
+            
+            var token = _jwt.GenerateToken(user.Id.ToString(), user.Email);
+            var userDTO = _mapper.Map<UserDTO>(user);
 
-            return Ok(new { token });
+            return Ok(new LoginResponseDTO { Token = token, User = userDTO});
         }
-    }
 
-    public class LoginRequest
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        {
+            if (request == null) return BadRequest("null request");
+            var user = _mapper.Map<User>(request);
+            user.CreatedAt = DateTime.UtcNow;
+            var result = await _repository.AddAsync(user);
+            return Ok(result);
+        }
     }
 }
