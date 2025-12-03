@@ -1,4 +1,9 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using ChatAppAPI.Data;
+using ChatAppAPI.Models.AuthDTO;
+using ChatAppAPI.Models.AuthModels;
+using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -8,34 +13,41 @@ namespace ChatAppAPI.Services
     public class JwtService
     {
         private readonly IConfiguration _config;
+        private readonly DataContext _db;
 
-        public JwtService(IConfiguration config)
+        public JwtService(IConfiguration config, DataContext db)
         {
+            _db = db;
             _config = config;
         }
 
-        public string GenerateToken(string userId, string username)
+        public async Task<LoginResponseDTO> Authenticate(LoginRequestDTO login)
         {
             var jwt = _config.GetSection("Jwt");
 
-            var claims = new[]
+            var issuer = _config["Jwt:Issuer"];
+            var audience = _config["Jwt:Audience"];
+            var key = _config["Jwt:Key"];
+            var tokenValidityMins = _config["Jwt:ExpiresInMinutes"];
+
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId),
-                new Claim(JwtRegisteredClaimNames.UniqueName, username)
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Email, login.Email),
+                }),
+                Issuer = issuer,
+                Audience = audience,
+                Expires = DateTime.UtcNow.AddMinutes(int.Parse(tokenValidityMins)),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                SecurityAlgorithms.HmacSha256)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt["Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+            var accessToken = tokenHandler.WriteToken(securityToken);
 
-            var token = new JwtSecurityToken(
-                issuer: jwt["Issuer"],
-                audience: jwt["Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwt["ExpiresInMinutes"])),
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new LoginResponseDTO { Email = login.Email, Token = accessToken };
         }
     }
 }

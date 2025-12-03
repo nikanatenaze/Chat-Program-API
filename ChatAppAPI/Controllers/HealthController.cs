@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChatAppAPI.Controllers
 {
+    [Authorize]
     [ApiExplorerSettings(GroupName = "5-HealthController")]
     [Route("api/[controller]")]
     [ApiController]

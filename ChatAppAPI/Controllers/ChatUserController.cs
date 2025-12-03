@@ -5,12 +5,14 @@ using ChatAppAPI.Models.ChatDTO;
 using ChatAppAPI.Models.ChatUserDTO;
 using ChatAppAPI.Models.UserDTO;
 using ChatAppAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChatAppAPI.Controllers
 {
-    [ApiExplorerSettings(GroupName = "3-ChatUsersController")]
+    [Authorize]
+    [ApiExplorerSettings(GroupName = "3-ChatUserController")]
     [Route("api/[controller]")]
     [ApiController]
     public class ChatUserController : ControllerBase

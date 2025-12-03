@@ -2,11 +2,13 @@
 using ChatAppAPI.Models;
 using ChatAppAPI.Models.MessageDTO;
 using ChatAppAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChatAppAPI.Controllers
 {
+    [Authorize]
     [ApiExplorerSettings(GroupName = "4-MessagesController")]
     [Route("api/[controller]")]
     [ApiController]

@@ -29,7 +29,16 @@ namespace ChatAppAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
+        public async Task<ActionResult<LoginResponseDTO>> Login(LoginRequestDTO request)
+        {
+            var result = await _jwt.Authenticate(request);
+            if (result == null) { return Unauthorized();  }
+            return Ok(result);
+        }
+
+/*        [AllowAnonymous]
+        [HttpPost("login1")]
+        public async Task<IActionResult> Login1([FromBody] LoginRequestDTO request)
         {
             var user = await _repository.GetAsync(x => x.Email == request.Email);
 
@@ -51,6 +60,6 @@ namespace ChatAppAPI.Controllers
             user.CreatedAt = DateTime.UtcNow;
             var result = await _repository.AddAsync(user);
             return Ok(result);
-        }
+        }*/
     }
 }
