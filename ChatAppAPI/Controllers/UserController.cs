@@ -57,8 +57,8 @@ namespace ChatAppAPI.Controllers
                 return NotFound("Cant find user");
             }
             var dto = _mapper.Map<User>(user);
-            var result = await _repository.UpdateAsync(dto);
-            return Ok(result);
+            await _repository.UpdateAsync(dto);
+            return NoContent();
         }
 
         [HttpDelete("Delete", Name = "DeleteUser")]
@@ -68,8 +68,8 @@ namespace ChatAppAPI.Controllers
             var User = await _repository.GetAsync(x => x.Id == user.Id);
             if (User == null) return NotFound("Account with that Id don't exists");
             if (user.Password != User.Password) return Unauthorized("Wrong password");
-            var result = await _repository.RemoveAsync(User);
-            return Ok(result);
+            await _repository.RemoveAsync(User);
+            return NoContent();
         }
     }
 }

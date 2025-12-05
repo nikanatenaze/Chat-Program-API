@@ -35,7 +35,8 @@ namespace ChatAppAPI.Controllers
         [HttpGet("GetAll", Name = "GetAllChatUsers")]
         public async Task<IActionResult> GetAllChatUsers()
         {
-            var result = await _repository.GetAllAsync();
+            var chatUsers = await _repository.GetAllAsync();
+            var result = _mapper.Map<List<ChatUserDTO>>(chatUsers);
             return Ok(result);
         }
 

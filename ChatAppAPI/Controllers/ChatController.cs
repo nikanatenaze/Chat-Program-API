@@ -33,10 +33,6 @@ namespace ChatAppAPI.Controllers
         public async Task<IActionResult> GetAllChats()
         {
             var AllChats = await _repository.GetAllAsync();
-            if (AllChats == null)
-            {
-                return NotFound("Chats doesn't found");
-            }
             var Dtos = _mapper.Map<List<ChatDTO>>(AllChats);
             return Ok(Dtos);
         }
@@ -60,9 +56,11 @@ namespace ChatAppAPI.Controllers
             var user = await _userReporitory.GetAsync(x => x.Id == create.CreatedByUserId);
             if (user == null) return BadRequest("Cant find user with that Id");
             var chat = _mapper.Map<Chat>(create);
+            chat.HasPassword = !string.IsNullOrEmpty(create.Password);
             chat.CreatedAt = DateTime.UtcNow;
-            await _repository.AddAsync(chat);
-            return Ok(chat);
+            var result = await _repository.AddAsync(chat);
+            var resultDto = _mapper.Map<ChatDTO>(result);
+            return Ok(resultDto);
         }
 
         [HttpPost("ChatVerification", Name = "LoginInChat")]
@@ -72,7 +70,8 @@ namespace ChatAppAPI.Controllers
             if(chat == null) return Unauthorized("cant find chat");
             if(!chat.HasPassword) return BadRequest("chat has no password");
             if(chat.Password != dto.Password) return Unauthorized("wrong password");
-            return Ok(chat);
+            var cDto = _mapper.Map<ChatDTO>(chat);
+            return Ok(cDto);
         }
 
         [HttpPatch("Update", Name = "UpdateChat")]
@@ -83,7 +82,8 @@ namespace ChatAppAPI.Controllers
             if (aChat == null) return NotFound();
             _mapper.Map(dto, aChat);
             var result = await _repository.UpdateAsync(aChat);
-            return Ok(result);
+            var resultDto = _mapper.Map<ChatDTO>(result);
+            return Ok(resultDto);
         }
 
         [HttpDelete("DeleteById/{Id:int}", Name = "DeleteChat")]

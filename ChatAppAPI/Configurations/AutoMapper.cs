@@ -24,7 +24,9 @@ namespace ChatAppAPI.Configurations
             CreateMap<ChatCreateDTO, Chat>();
             CreateMap<ChatUpdateDTO, Chat>()
                 .ForMember(dest => dest.CreatedByUserId, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Password, opt => opt.Ignore())
+                .ForMember(dest => dest.HasPassword, opt => opt.Ignore());
 
             // ChatUser
             CreateMap<ChatUserDTO, ChatUser>();

@@ -38,7 +38,7 @@ namespace ChatAppAPI.Controllers
         public async Task<IActionResult> GetMessageById(int Id)
         {
             var result = await _repository.GetAsync(x => x.Id == Id);
-            if(result == null) return NotFound("can find message");
+            if(result == null) return NotFound("cannot find message");
             return Ok(result);
         }
 
@@ -61,28 +61,28 @@ namespace ChatAppAPI.Controllers
         {
             if(dto == null) return BadRequest("empty prompt");
             var message = await _repository.GetAsync(x => x.Id == dto.Id);
-            if (message == null) return BadRequest();
+            if (message == null) return NotFound("message not found");
             if (message.UserId != dto.UserId)
                 return Forbid("You cannot edit someone else's message");
             var isMember = await _chatUserRepository.IsUserInChat(dto.UserId, message.ChatId);
             if (!isMember) return Forbid("Not allowed");
             message.Content = dto.Content;
-            var result = await _repository.UpdateAsync(message);
-            return Ok();
+            await _repository.UpdateAsync(message);
+            return NoContent();
         }
 
         [HttpDelete("Delete", Name = "DeleteMessage")]
-        public async Task<IActionResult> RemoveMessage([FromBody] MessageDeleteDTO dto)
+        public async Task<IActionResult> DeleteMessage([FromBody] MessageDeleteDTO dto)
         {
             if (dto == null) return BadRequest("empty prompt");
             var message = await _repository.GetAsync(x => x.Id == dto.Id);
-            if (message == null) return NotFound("can find message");
+            if (message == null) return NotFound("cannot find message");
             if (message.UserId != dto.UserId)
                 return Forbid("You cannot delete someone else's message");
             if (!await _chatUserRepository.IsUserInChat(dto.UserId, message.ChatId)) 
                 return Forbid("Not allowed");
-            var result = await _repository.RemoveAsync(message);
-            return Ok(result);
+            await _repository.RemoveAsync(message);
+            return NoContent();
         }
     }
 }
