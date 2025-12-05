@@ -13,18 +13,14 @@ namespace ChatAppAPI.Services
     public class JwtService
     {
         private readonly IConfiguration _config;
-        private readonly DataContext _db;
 
-        public JwtService(IConfiguration config, DataContext db)
+        public JwtService(IConfiguration config)
         {
-            _db = db;
             _config = config;
         }
 
-        public async Task<LoginResponseDTO> Authenticate(LoginRequestDTO login)
+        public async Task<LoginResponse> Authenticate(Models.AuthDTO.LoginRequest request)
         {
-            var jwt = _config.GetSection("Jwt");
-
             var issuer = _config["Jwt:Issuer"];
             var audience = _config["Jwt:Audience"];
             var key = _config["Jwt:Key"];
@@ -34,7 +30,7 @@ namespace ChatAppAPI.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Email, login.Email),
+                    new Claim(JwtRegisteredClaimNames.Email, request.Email),
                 }),
                 Issuer = issuer,
                 Audience = audience,
@@ -47,7 +43,7 @@ namespace ChatAppAPI.Services
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var accessToken = tokenHandler.WriteToken(securityToken);
 
-            return new LoginResponseDTO { Email = login.Email, Token = accessToken };
+            return new LoginResponse {Email = request.Email, Token = accessToken};
         }
     }
 }

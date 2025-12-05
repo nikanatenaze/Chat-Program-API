@@ -2,7 +2,7 @@
 
 namespace ChatAppAPI.Models.AuthModels
 {
-    public class LoginResponseDTO
+    public class LoginResponse
     {
         public string Token { get; set; }
         public string Email { get; set; }

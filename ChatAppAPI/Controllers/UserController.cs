@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChatAppAPI.Controllers
 {
     [Authorize]
-    //[ApiExplorerSettings(GroupName = "1-UsersController")]
+    [ApiExplorerSettings(GroupName = "1-Users")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -70,13 +70,6 @@ namespace ChatAppAPI.Controllers
             if (user.Password != User.Password) return Unauthorized("Wrong password");
             var result = await _repository.RemoveAsync(User);
             return Ok(result);
-        }
-
-        [HttpGet("me")]
-        public IActionResult GetMyInfo()
-        {
-            var userId = User.FindFirst("id")?.Value;
-            return Ok(new { userId });
         }
     }
 }

@@ -16,11 +16,22 @@ if (builder.Environment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>();
 }
 
-// 2️⃣ Add services
+// Add services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+// Swagger configurations
 builder.Services.AddSwaggerGen(options =>
 {
+    // Controller names
+    options.TagActionsBy(api =>
+    {
+        return new[] { api.GroupName ?? api.ActionDescriptor.RouteValues["controller"] };
+    });
+
+    options.DocInclusionPredicate((_, _) => true);
+
+    // Swagger JWT
     var jwtSecurityScheme = new OpenApiSecurityScheme
     {
         BearerFormat = "JWT",
@@ -53,6 +64,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 // Register repositories
 builder.Services.AddScoped<IUserReporitory, UserRepository>();
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
@@ -80,6 +92,24 @@ builder.Services.AddAuthentication(options =>
         }
     };
 
+    options.Events = new()
+    {
+        OnMessageReceived = context =>
+        {
+            var token = context.Request.Headers.Authorization.ToString();
+            if (!string.IsNullOrEmpty(token))
+            {
+                Console.WriteLine($"Received Token: {token}");
+            }
+            return Task.CompletedTask;
+        },
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+            return Task.CompletedTask;
+        }
+    };
+
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
@@ -97,64 +127,26 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// swagger JWT auth
-/*builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-
-    c.TagActionsBy(api =>
-    {
-        return new[] { api.GroupName ?? api.ActionDescriptor.RouteValues["controller"] };
-    });
-
-    c.DocInclusionPredicate((_, _) => true);
-
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Enter your JWT token like: Bearer {token}"
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});*/
-
 // Adding JwtService
 builder.Services.AddScoped<JwtService>();
 
 var app = builder.Build();
 
-// 3️⃣ Configure app URLs for Render
+// Configure app URLs for Render
 var port = Environment.GetEnvironmentVariable("PORT");
 if (!app.Environment.IsDevelopment() && port != null)
 {
     app.Urls.Add($"http://*:{port}");
 }
 
-// 4️⃣ Middleware
+// Middleware
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 5️⃣ Test endpoint
+// Test endpoint
 app.MapGet("/", () => "API is running on Render 🚀");
 
 app.MapControllers();
