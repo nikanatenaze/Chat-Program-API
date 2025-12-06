@@ -2,5 +2,6 @@ This is API for the my chat application, the API is not done on 100% but its alr
 
 safety notes:
 ```
-in this API I have not used BCrypt(password Hasher). so all passwords can be leaked. (if some one will crack my Database)
+in this API I have not used BCrypt(password Hasher). so all passwords can be leaked.
+(if some one will crack my Database)
 ```
