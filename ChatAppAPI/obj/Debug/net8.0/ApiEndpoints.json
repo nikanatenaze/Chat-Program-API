@@ -1,7 +1,7 @@
 [
   {
     "ContainingType": "Program\u002B\u003C\u003Ec",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__0_4",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__0_5",
     "RelativePath": "",
     "HttpMethod": "GET",
     "IsController": false,
@@ -314,7 +314,7 @@
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.MessageController",
-    "Method": "RemoveMessage",
+    "Method": "DeleteMessage",
     "RelativePath": "api/Message/Delete",
     "HttpMethod": "DELETE",
     "IsController": true,
@@ -418,16 +418,6 @@
     ],
     "ReturnTypes": [],
     "EndpointName": "GetUserById"
-  },
-  {
-    "ContainingType": "ChatAppAPI.Controllers.UserController",
-    "Method": "GetMyInfo",
-    "RelativePath": "api/User/me",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.UserController",

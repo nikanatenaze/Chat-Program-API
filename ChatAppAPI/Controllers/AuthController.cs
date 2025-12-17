@@ -48,6 +48,9 @@ namespace ChatAppAPI.Controllers
         public async Task<IActionResult> Register([FromBody] Models.AuthDTO.RegisterRequest request)
         {
             if (request == null) return BadRequest("null request");
+            Console.WriteLine(request.Email);
+            var validUser = await _repository.GetAsync(x => x.Email == request.Email) == null ? true : false;
+            if(!validUser) return BadRequest("User with that email already exits!");
             var user = _mapper.Map<User>(request);
             user.CreatedAt = DateTime.UtcNow;
             var result = await _repository.AddAsync(user);

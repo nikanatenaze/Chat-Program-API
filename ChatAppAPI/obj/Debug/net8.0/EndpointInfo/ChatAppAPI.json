@@ -168,18 +168,6 @@
         }
       }
     },
-    "/api/User/me": {
-      "get": {
-        "tags": [
-          "1-Users"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Chat/GetAll": {
       "get": {
         "tags": [
