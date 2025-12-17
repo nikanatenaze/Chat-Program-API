@@ -54,6 +54,23 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+// Adding Cors
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost",
+        policy =>
+        {
+            policy.SetIsOriginAllowed(origin =>
+            {
+                // Allow any localhost, any port
+                return origin.StartsWith("http://localhost") || origin.StartsWith("https://localhost");
+            })
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+});
+
 // Get connection string
 var connectionString = builder.Configuration.GetConnectionString("BaseConnection");
 
