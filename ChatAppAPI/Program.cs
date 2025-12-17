@@ -160,6 +160,7 @@ if (!app.Environment.IsDevelopment() && port != null)
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseCors("AllowLocalhost");
 app.UseAuthentication();
 app.UseAuthorization();
 
