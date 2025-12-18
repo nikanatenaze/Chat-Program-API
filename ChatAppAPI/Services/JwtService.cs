@@ -1,6 +1,9 @@
-﻿using ChatAppAPI.Data;
+﻿using AutoMapper;
+using ChatAppAPI.Data;
 using ChatAppAPI.Models.AuthDTO;
 using ChatAppAPI.Models.AuthModels;
+using ChatAppAPI.Models.UserDTO;
+using ChatAppAPI.Repository;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,9 +16,13 @@ namespace ChatAppAPI.Services
     public class JwtService
     {
         private readonly IConfiguration _config;
+        private readonly IUserReporitory _reporitory;
+        private readonly IMapper _mapper;
 
-        public JwtService(IConfiguration config)
+        public JwtService(IConfiguration config, IUserReporitory reporitory, IMapper mapper)
         {
+            _reporitory = reporitory;
+            _mapper = mapper;
             _config = config;
         }
 
@@ -43,7 +50,10 @@ namespace ChatAppAPI.Services
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var accessToken = tokenHandler.WriteToken(securityToken);
 
-            return new LoginResponse {Email = request.Email, Token = accessToken};
+            var account = _mapper.Map<UserDTO>(await _reporitory.GetAsync(x => x.Email == request.Email));
+            
+
+            return new LoginResponse {User = account, Token = accessToken};
         }
     }
 }
