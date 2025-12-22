@@ -58,13 +58,20 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost",
+    options.AddPolicy("AllowFrontend",
         policy =>
         {
             policy.SetIsOriginAllowed(origin =>
             {
-                // Allow any localhost, any port
-                return origin.StartsWith("http://localhost") || origin.StartsWith("https://localhost");
+                // Allow localhost for development
+                if (origin.StartsWith("http://localhost") || origin.StartsWith("https://localhost"))
+                    return true;
+
+                // Allow GitHub Pages
+                if (origin == "https://nikanatenaze.github.io")
+                    return true;
+
+                return false;
             })
             .AllowAnyHeader()
             .AllowAnyMethod();
