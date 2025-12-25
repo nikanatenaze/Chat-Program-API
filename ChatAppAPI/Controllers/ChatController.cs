@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChatAppAPI.Controllers
 {
     [Authorize]
-    [ApiExplorerSettings(GroupName = "2-Chats")]
+    [ApiExplorerSettings(GroupName = "3-Chats")]
     [Route("api/[controller]")]
     [ApiController]
     public class ChatController : ControllerBase
@@ -19,14 +19,16 @@ namespace ChatAppAPI.Controllers
         private readonly ILogger<ChatController> _logger;
         private readonly IChatRepository _repository;
         private readonly IUserReporitory _userReporitory;
+        private readonly IMessageRepository _messageRepository;
         private readonly IMapper _mapper;
 
-        public ChatController(ILogger<ChatController> logger, DataContext data, IChatRepository repo , IUserReporitory userReporitory, IMapper mapper)
+        public ChatController(ILogger<ChatController> logger, DataContext data, IChatRepository repo , IUserReporitory userReporitory, IMessageRepository messageRepository,IMapper mapper)
         {
             _logger = logger;
             _repository = repo;
             _mapper = mapper;
             _userReporitory = userReporitory;
+            _messageRepository = messageRepository;
         }
 
         [HttpGet("GetAll", Name = "GetAllChats")]
@@ -46,6 +48,16 @@ namespace ChatAppAPI.Controllers
                 return NotFound("Not found Chat");
             var Dto = _mapper.Map<ChatDTO>(found);
             return Ok(Dto);
+        }
+
+        [HttpGet("GetMessages/{id:int}", Name = "GetChatMessages")]
+        public async Task<IActionResult> GetChatMessages(int id)
+        {
+            if (id == 0) return BadRequest("Id can't be null");
+            var chat = await _repository.GetAsync(x => x.Id == id);
+            if (chat == null) return NotFound("Can't find chat");
+            var messages = await _messageRepository.GetAllAsync(x => x.ChatId == id);
+            return Ok(messages);
         }
 
         [HttpPost("Create", Name = "CreateChat")]

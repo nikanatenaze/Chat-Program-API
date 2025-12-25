@@ -70,9 +70,22 @@
     "/api/User/GetAll": {
       "get": {
         "tags": [
-          "1-Users"
+          "2-Users"
         ],
         "operationId": "GetAllUsers",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/User/GetTokenData": {
+      "get": {
+        "tags": [
+          "2-Users"
+        ],
+        "operationId": "DecodeToken",
         "responses": {
           "200": {
             "description": "OK"
@@ -83,7 +96,7 @@
     "/api/User/GetById/{id}": {
       "get": {
         "tags": [
-          "1-Users"
+          "2-Users"
         ],
         "operationId": "GetUserById",
         "parameters": [
@@ -107,7 +120,7 @@
     "/api/User/Update": {
       "patch": {
         "tags": [
-          "1-Users"
+          "2-Users"
         ],
         "operationId": "UpdateUser",
         "requestBody": {
@@ -139,7 +152,7 @@
     "/api/User/Delete": {
       "delete": {
         "tags": [
-          "1-Users"
+          "2-Users"
         ],
         "operationId": "DeleteUser",
         "requestBody": {
@@ -171,7 +184,7 @@
     "/api/Chat/GetAll": {
       "get": {
         "tags": [
-          "2-Chats"
+          "3-Chats"
         ],
         "operationId": "GetAllChats",
         "responses": {
@@ -184,9 +197,33 @@
     "/api/Chat/GetById/{id}": {
       "get": {
         "tags": [
-          "2-Chats"
+          "3-Chats"
         ],
         "operationId": "GetChatById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Chat/GetChatMessages/{id}": {
+      "get": {
+        "tags": [
+          "3-Chats"
+        ],
+        "operationId": "GetChatMessages",
         "parameters": [
           {
             "name": "id",
@@ -208,7 +245,7 @@
     "/api/Chat/Create": {
       "post": {
         "tags": [
-          "2-Chats"
+          "3-Chats"
         ],
         "operationId": "CreateChat",
         "requestBody": {
@@ -240,7 +277,7 @@
     "/api/Chat/ChatVerification": {
       "post": {
         "tags": [
-          "2-Chats"
+          "3-Chats"
         ],
         "operationId": "LoginInChat",
         "requestBody": {
@@ -272,7 +309,7 @@
     "/api/Chat/Update": {
       "patch": {
         "tags": [
-          "2-Chats"
+          "3-Chats"
         ],
         "operationId": "UpdateChat",
         "requestBody": {
@@ -304,7 +341,7 @@
     "/api/Chat/DeleteById/{Id}": {
       "delete": {
         "tags": [
-          "2-Chats"
+          "3-Chats"
         ],
         "operationId": "DeleteChat",
         "parameters": [
@@ -328,7 +365,7 @@
     "/api/ChatUser/GetAll": {
       "get": {
         "tags": [
-          "3-ChatUser"
+          "4-ChatUser"
         ],
         "operationId": "GetAllChatUsers",
         "responses": {
@@ -341,7 +378,7 @@
     "/api/ChatUser/GetUsersInChat/{Id}": {
       "get": {
         "tags": [
-          "3-ChatUser"
+          "4-ChatUser"
         ],
         "operationId": "GetUsersInChat",
         "parameters": [
@@ -365,7 +402,7 @@
     "/api/ChatUser/GetChatsOfUser/{Id}": {
       "get": {
         "tags": [
-          "3-ChatUser"
+          "4-ChatUser"
         ],
         "operationId": "GetChatsOfUser",
         "parameters": [
@@ -389,7 +426,7 @@
     "/api/ChatUser/{chatId}/isMember/{userId}": {
       "get": {
         "tags": [
-          "3-ChatUser"
+          "4-ChatUser"
         ],
         "parameters": [
           {
@@ -421,7 +458,7 @@
     "/api/ChatUser/AddChatUser": {
       "post": {
         "tags": [
-          "3-ChatUser"
+          "4-ChatUser"
         ],
         "operationId": "AddChatUser",
         "requestBody": {
@@ -453,7 +490,7 @@
     "/api/ChatUser/RemoveFromChat": {
       "delete": {
         "tags": [
-          "3-ChatUser"
+          "4-ChatUser"
         ],
         "operationId": "RemoveChatUser",
         "requestBody": {
@@ -485,7 +522,7 @@
     "/api/Message/GetAll": {
       "get": {
         "tags": [
-          "4-Messages"
+          "5-Messages"
         ],
         "operationId": "GetAllMessages",
         "responses": {
@@ -498,7 +535,7 @@
     "/api/Message/GetById/{Id}": {
       "get": {
         "tags": [
-          "4-Messages"
+          "5-Messages"
         ],
         "operationId": "GetMessageById",
         "parameters": [
@@ -522,7 +559,7 @@
     "/api/Message/Create": {
       "post": {
         "tags": [
-          "4-Messages"
+          "5-Messages"
         ],
         "operationId": "CreateMessage",
         "requestBody": {
@@ -554,7 +591,7 @@
     "/api/Message/Edit": {
       "patch": {
         "tags": [
-          "4-Messages"
+          "5-Messages"
         ],
         "operationId": "EditMessage",
         "requestBody": {
@@ -586,7 +623,7 @@
     "/api/Message/Delete": {
       "delete": {
         "tags": [
-          "4-Messages"
+          "5-Messages"
         ],
         "operationId": "DeleteMessage",
         "requestBody": {
@@ -618,7 +655,7 @@
     "/api/Health": {
       "get": {
         "tags": [
-          "5-Health"
+          "6-Health"
         ],
         "responses": {
           "200": {
@@ -628,7 +665,7 @@
       },
       "post": {
         "tags": [
-          "5-Health"
+          "6-Health"
         ],
         "responses": {
           "200": {
@@ -638,7 +675,7 @@
       },
       "put": {
         "tags": [
-          "5-Health"
+          "6-Health"
         ],
         "responses": {
           "200": {
@@ -648,7 +685,7 @@
       },
       "delete": {
         "tags": [
-          "5-Health"
+          "6-Health"
         ],
         "responses": {
           "200": {
@@ -658,7 +695,7 @@
       },
       "head": {
         "tags": [
-          "5-Health"
+          "6-Health"
         ],
         "responses": {
           "200": {

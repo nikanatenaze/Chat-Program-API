@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChatAppAPI.Controllers
 {
-    [ApiExplorerSettings(GroupName = "5-Health")]
+    [ApiExplorerSettings(GroupName = "6-Health")]
     [Route("api/[controller]")]
     [ApiController]
     public class HealthController : ControllerBase

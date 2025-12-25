@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ChatAppAPI.Data;
+using ChatAppAPI.Models;
 using ChatAppAPI.Models.AuthDTO;
 using ChatAppAPI.Models.AuthModels;
 using ChatAppAPI.Models.UserDTO;
@@ -26,19 +27,28 @@ namespace ChatAppAPI.Services
             _config = config;
         }
 
-        public async Task<LoginResponse> Authenticate(Models.AuthDTO.LoginRequest request)
+        public async Task<LoginResponse> Authenticate(User request)
         {
+
+            if (request == null)
+                throw new Exception("Invalid credentials");
+
             var issuer = _config["Jwt:Issuer"];
             var audience = _config["Jwt:Audience"];
             var key = _config["Jwt:Key"];
             var tokenValidityMins = _config["Jwt:ExpiresInMinutes"];
 
+            var claims = new List<Claim> {
+                new Claim(JwtRegisteredClaimNames.Sub, request.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, request.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, request.Email),
+                new Claim(ClaimTypes.Name, request.Name),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Email, request.Email),
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Issuer = issuer,
                 Audience = audience,
                 Expires = DateTime.UtcNow.AddMinutes(int.Parse(tokenValidityMins)),
@@ -50,10 +60,10 @@ namespace ChatAppAPI.Services
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var accessToken = tokenHandler.WriteToken(securityToken);
 
-            var account = _mapper.Map<UserDTO>(await _reporitory.GetAsync(x => x.Email == request.Email));
+            var account = _mapper.Map<UserDTO>(request);
             
 
-            return new LoginResponse {User = account, Token = accessToken};
+            return new LoginResponse { User = account, Token = accessToken };
         }
     }
 }

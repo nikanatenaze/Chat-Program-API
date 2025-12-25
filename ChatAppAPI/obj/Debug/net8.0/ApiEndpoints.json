@@ -130,6 +130,23 @@
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.ChatController",
+    "Method": "GetChatMessages",
+    "RelativePath": "api/Chat/GetChatMessages/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "GetChatMessages"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.ChatController",
     "Method": "Update",
     "RelativePath": "api/Chat/Update",
     "HttpMethod": "PATCH",
@@ -418,6 +435,17 @@
     ],
     "ReturnTypes": [],
     "EndpointName": "GetUserById"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.UserController",
+    "Method": "GetTokenData",
+    "RelativePath": "api/User/GetTokenData",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "DecodeToken"
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.UserController",

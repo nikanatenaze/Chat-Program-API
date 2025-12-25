@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChatAppAPI.Controllers
 {
     [Authorize]
-    [ApiExplorerSettings(GroupName = "4-Messages")]
+    [ApiExplorerSettings(GroupName = "5-Messages")]
     [Route("api/[controller]")]
     [ApiController]
     public class MessageController : ControllerBase

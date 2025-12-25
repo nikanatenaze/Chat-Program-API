@@ -6,11 +6,13 @@ using ChatAppAPI.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace ChatAppAPI.Controllers
 {
     [Authorize]
-    [ApiExplorerSettings(GroupName = "1-Users")]
+    [ApiExplorerSettings(GroupName = "2-Users")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -37,6 +39,19 @@ namespace ChatAppAPI.Controllers
             return Ok(Dtos);
         }
 
+        [Authorize]
+        [HttpGet("GetTokenData", Name = "DecodeToken")]
+        public IActionResult GetTokenData()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            var name = User.FindFirstValue(ClaimTypes.Name);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("Invalid token: missing user ID");
+
+            return Ok(new { Id = userId, Name = name, Email = email });
+        }
 
         [HttpGet("GetById/{id:int}", Name = "GetUserById")]
         public async Task<IActionResult> GetUserById(int id)

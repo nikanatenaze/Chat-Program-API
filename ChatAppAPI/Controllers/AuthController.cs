@@ -38,7 +38,7 @@ namespace ChatAppAPI.Controllers
             if (user == null) return Unauthorized("User not found");
             if (user.Password != request.Password) return Unauthorized("Invalid password");
 
-            var Response = _jwt.Authenticate(request);
+            var Response = _jwt.Authenticate(user);
 
             return Ok(Response.Result);
         }
@@ -48,7 +48,6 @@ namespace ChatAppAPI.Controllers
         public async Task<IActionResult> Register([FromBody] Models.AuthDTO.RegisterRequest request)
         {
             if (request == null) return BadRequest("null request");
-            Console.WriteLine(request.Email);
             var validUser = await _repository.GetAsync(x => x.Email == request.Email) == null ? true : false;
             if(!validUser) return BadRequest("User with that email already exits!");
             var user = _mapper.Map<User>(request);
