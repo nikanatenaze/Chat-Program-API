@@ -1,4 +1,5 @@
-﻿using ChatAppAPI.Data;
+﻿using ChatAppAPI.Configurations;
+using ChatAppAPI.Data;
 using ChatAppAPI.Models;
 using ChatAppAPI.Repository;
 using ChatAppAPI.Services;
@@ -17,6 +18,7 @@ if (builder.Environment.IsDevelopment())
 }
 
 // Add services
+builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -58,24 +60,16 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.SetIsOriginAllowed(origin =>
-            {
-                // Allow localhost for development
-                if (origin.StartsWith("http://localhost") || origin.StartsWith("https://localhost"))
-                    return true;
-
-                // Allow GitHub Pages
-                if (origin == "https://nikanatenaze.github.io")
-                    return true;
-
-                return false;
-            })
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:4200", // your local frontend
+                "https://nikanatenaze.github.io" // deployed frontend
+            )
             .AllowAnyHeader()
-            .AllowAnyMethod();
-        });
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
 // Get connection string
@@ -109,27 +103,23 @@ builder.Services.AddAuthentication(options =>
 {
     options.Events = new JwtBearerEvents
     {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+
+            if (!string.IsNullOrEmpty(accessToken) &&
+                path.StartsWithSegments("/chathub"))
+            {
+                context.Token = accessToken;
+            }
+
+            return Task.CompletedTask;
+        },
+
         OnAuthenticationFailed = context =>
         {
             Console.WriteLine("JWT ERROR: " + context.Exception.Message);
-            return Task.CompletedTask;
-        }
-    };
-
-    options.Events = new()
-    {
-        OnMessageReceived = context =>
-        {
-            var token = context.Request.Headers.Authorization.ToString();
-            if (!string.IsNullOrEmpty(token))
-            {
-                Console.WriteLine($"Received Token: {token}");
-            }
-            return Task.CompletedTask;
-        },
-        OnAuthenticationFailed = context =>
-        {
-            Console.WriteLine($"Authentication failed: {context.Exception.Message}");
             return Task.CompletedTask;
         }
     };
@@ -140,7 +130,9 @@ builder.Services.AddAuthentication(options =>
     {
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])),
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtSettings["Key"])
+        ),
         ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
         ValidateIssuer = true,
         ValidateAudience = true,
@@ -174,6 +166,7 @@ app.UseAuthorization();
 // Test endpoint
 app.MapGet("/", () => "API is running on Render 🚀");
 
+app.MapHub<ChatHub>("/chathub");
 app.MapControllers();
 
 app.Run();

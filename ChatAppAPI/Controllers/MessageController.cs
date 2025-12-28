@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using ChatAppAPI.Configurations;
 using ChatAppAPI.Models;
 using ChatAppAPI.Models.MessageDTO;
 using ChatAppAPI.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ChatAppAPI.Controllers
 {
@@ -18,13 +21,15 @@ namespace ChatAppAPI.Controllers
         private readonly IMessageRepository _repository;
         private readonly IChatUserRepository _chatUserRepository;
         private readonly IMapper _mapper;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public MessageController(ILogger<MessageController> logger, IMessageRepository repo, IMapper mapper, IChatUserRepository chatUserRepository)
+        public MessageController(ILogger<MessageController> logger, IMessageRepository repo, IMapper mapper, IChatUserRepository chatUserRepository, IHubContext<ChatHub> hubContext)
         {
             _logger = logger;
             _repository = repo;
             _mapper = mapper;
             _chatUserRepository = chatUserRepository;
+            _hubContext = hubContext;
         }
 
         [HttpGet("GetAll", Name = "GetAllMessages")]
@@ -53,6 +58,10 @@ namespace ChatAppAPI.Controllers
             var message = _mapper.Map<Message>(dto);
             message.CreatedAt = DateTime.UtcNow;
             var result = await _repository.AddAsync(message);
+            // SignalR Test
+            await _hubContext.Clients.Group(message.ChatId.ToString())
+            .SendAsync("CreateMessage", result);
+
             return Ok(result);
         }
 
@@ -67,7 +76,10 @@ namespace ChatAppAPI.Controllers
             var isMember = await _chatUserRepository.IsUserInChat(dto.UserId, message.ChatId);
             if (!isMember) return Forbid("Not allowed");
             message.Content = dto.Content;
-            await _repository.UpdateAsync(message);
+            var result = await _repository.UpdateAsync(message);
+
+            await _hubContext.Clients.Group(message.ChatId.ToString())
+            .SendAsync("EditMessage", result);
             return NoContent();
         }
 
@@ -81,7 +93,10 @@ namespace ChatAppAPI.Controllers
                 return Forbid("You cannot delete someone else's message");
             if (!await _chatUserRepository.IsUserInChat(dto.UserId, message.ChatId)) 
                 return Forbid("Not allowed");
-            await _repository.RemoveAsync(message);
+            var result = await _repository.RemoveAsync(message);
+
+            await _hubContext.Clients.Group(message.ChatId.ToString())
+            .SendAsync("RemoveMessage", result);
             return NoContent();
         }
     }
