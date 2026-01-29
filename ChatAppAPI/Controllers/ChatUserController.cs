@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using ChatAppAPI.Data;
+using ChatAppAPI.Configurations;
 using ChatAppAPI.Models;
 using ChatAppAPI.Models.ChatDTO;
 using ChatAppAPI.Models.ChatUserDTO;
 using ChatAppAPI.Models.UserDTO;
 using ChatAppAPI.Repository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ChatAppAPI.Controllers
 {
@@ -21,15 +21,17 @@ namespace ChatAppAPI.Controllers
         private readonly IChatUserRepository _repository;
         private readonly IUserReporitory _userRepository;
         private readonly IChatRepository _chatRepository;
+        private readonly IHubContext<ChatHub> _hubContext;
         private readonly IMapper _mapper;
 
-        public ChatUserController(ILogger<ChatUserController> logger, IChatUserRepository repo, IUserReporitory userRepository, IChatRepository chatRepository, IMapper mapper)
+        public ChatUserController(ILogger<ChatUserController> logger, IChatUserRepository repo, IUserReporitory userRepository, IChatRepository chatRepository, IMapper mapper, IHubContext<ChatHub> hubContext)
         {
             _logger = logger;
             _repository = repo;
             _mapper = mapper;
             _userRepository = userRepository;
             _chatRepository = chatRepository;
+            _hubContext = hubContext;
         }
 
         [HttpGet("GetAll", Name = "GetAllChatUsers")]
@@ -70,27 +72,71 @@ namespace ChatAppAPI.Controllers
         [HttpPost("AddChatUser", Name = "AddChatUser")]
         public async Task<IActionResult> AddChatUser([FromBody] ChatUserDTO item)
         {
-            var user = await _userRepository.GetAsync(x => x.Id == item.UserId);
+            var (user, chat) = await GetUserAndChat(item.UserId, item.ChatId);
             if (user == null) return NotFound("Can't find user");
-            var chat = await _chatRepository.GetAsync(x => x.Id == item.ChatId);
             if (chat == null) return NotFound("Can't find chat");
-            var exits = await _repository.GetAsync(x => x.UserId == item.UserId && x.ChatId == item.ChatId);
-            if (exits != null) return BadRequest("ChatUser already exits");
+            var exists = await _repository.GetAsync(x => x.UserId == item.UserId && x.ChatId == item.ChatId);
+            if (exists != null) return BadRequest("ChatUser already exits");
             var resp = await _repository.AddAsync(new ChatUser { ChatId = item.ChatId, UserId = item.UserId, JoinedAt = DateTime.UtcNow});
+
+            // SignalR
+            await _hubContext.Clients
+                .Group(item.ChatId.ToString())
+                .SendAsync("ChatUserJoined", new
+                {
+                    ChatId = item.ChatId,
+                    UserId = item.UserId,
+                    Username = user.Name
+                });
+
+            await _hubContext.Clients
+                .User(item.UserId.ToString())
+                .SendAsync("NewChatAssigned", new
+                {
+                    ChatId = item.ChatId,
+                    ChatName = chat.Name,
+                    JoinedAt = DateTime.UtcNow
+                });
+
             return Ok(_mapper.Map<ChatUserDTO>(resp));
         }
 
         [HttpDelete("RemoveFromChat", Name = "RemoveChatUser")]
         public async Task<IActionResult> RemoveChatUser([FromBody] ChatUserDTO item)
         {
-            var user = await _userRepository.GetAsync(x => x.Id == item.UserId);
+            var (user, chat) = await GetUserAndChat(item.UserId, item.ChatId);
             if (user == null) return NotFound("Can't find user");
-            var chat = await _chatRepository.GetAsync(x => x.Id == item.ChatId);
             if (chat == null) return NotFound("Can't find chat");
             var ChatUser = await _repository.GetAsync(x => x.UserId == item.UserId && x.ChatId == item.ChatId);
             if (ChatUser == null) return NotFound("Can'f find chat user");
             var result = await _repository.RemoveAsync(ChatUser);
+
+            // SignalR
+            await _hubContext.Clients
+                .Group(item.ChatId.ToString())
+                .SendAsync("ChatUserLeft", new
+                {
+                    ChatId = item.ChatId,
+                    UserId = item.UserId,
+                    Username = user.Name
+                });
+
+            await _hubContext.Clients
+                .User(item.UserId.ToString())
+                .SendAsync("ChatRemoved", new
+                {
+                    ChatId = item.ChatId,
+                    ChatName = chat.Name
+                });
+
             return Ok(result);
+        }
+
+        private async Task<(User user, Chat chat)> GetUserAndChat(int userId, int chatId)
+        {
+            var user = await _userRepository.GetAsync(x => x.Id == userId);
+            var chat = await _chatRepository.GetAsync(x => x.Id == chatId);
+            return (user, chat);
         }
     }
 }

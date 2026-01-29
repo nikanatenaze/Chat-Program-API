@@ -1,9 +1,9 @@
 ﻿using ChatAppAPI.Configurations;
 using ChatAppAPI.Data;
-using ChatAppAPI.Models;
 using ChatAppAPI.Repository;
 using ChatAppAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -145,6 +145,9 @@ builder.Services.AddAuthorization();
 
 // Adding JwtService
 builder.Services.AddScoped<JwtService>();
+
+// Adding Id provider
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
 var app = builder.Build();
 

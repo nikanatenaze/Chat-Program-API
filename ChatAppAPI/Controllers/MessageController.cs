@@ -37,6 +37,7 @@ namespace ChatAppAPI.Controllers
         {
             var result = await _repository.GetAllAsync();
             return Ok(result);
+
         }
 
         [HttpGet("GetById/{Id:int}", Name = "GetMessageById")]
