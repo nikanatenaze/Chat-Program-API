@@ -82,20 +82,11 @@ namespace ChatAppAPI.Controllers
             // SignalR
             await _hubContext.Clients
                 .Group(item.ChatId.ToString())
-                .SendAsync("ChatUserJoined", new
+                .SendAsync("AddChatUser", new
                 {
                     ChatId = item.ChatId,
                     UserId = item.UserId,
                     Username = user.Name
-                });
-
-            await _hubContext.Clients
-                .User(item.UserId.ToString())
-                .SendAsync("NewChatAssigned", new
-                {
-                    ChatId = item.ChatId,
-                    ChatName = chat.Name,
-                    JoinedAt = DateTime.UtcNow
                 });
 
             return Ok(_mapper.Map<ChatUserDTO>(resp));
@@ -114,19 +105,11 @@ namespace ChatAppAPI.Controllers
             // SignalR
             await _hubContext.Clients
                 .Group(item.ChatId.ToString())
-                .SendAsync("ChatUserLeft", new
+                .SendAsync("RemoveChatUser", new
                 {
                     ChatId = item.ChatId,
                     UserId = item.UserId,
                     Username = user.Name
-                });
-
-            await _hubContext.Clients
-                .User(item.UserId.ToString())
-                .SendAsync("ChatRemoved", new
-                {
-                    ChatId = item.ChatId,
-                    ChatName = chat.Name
                 });
 
             return Ok(result);
