@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ChatAppAPI.Configurations;
+using ChatAppAPI.Hubs;
 using ChatAppAPI.Models;
 using ChatAppAPI.Models.ChatDTO;
 using ChatAppAPI.Models.ChatUserDTO;
@@ -21,10 +21,10 @@ namespace ChatAppAPI.Controllers
         private readonly IChatUserRepository _repository;
         private readonly IUserReporitory _userRepository;
         private readonly IChatRepository _chatRepository;
-        private readonly IHubContext<ChatHub> _hubContext;
+        private readonly IHubContext<MainHub> _hubContext;
         private readonly IMapper _mapper;
 
-        public ChatUserController(ILogger<ChatUserController> logger, IChatUserRepository repo, IUserReporitory userRepository, IChatRepository chatRepository, IMapper mapper, IHubContext<ChatHub> hubContext)
+        public ChatUserController(ILogger<ChatUserController> logger, IChatUserRepository repo, IUserReporitory userRepository, IChatRepository chatRepository, IMapper mapper, IHubContext<MainHub> hubContext)
         {
             _logger = logger;
             _repository = repo;
@@ -77,17 +77,13 @@ namespace ChatAppAPI.Controllers
             if (chat == null) return NotFound("Can't find chat");
             var exists = await _repository.GetAsync(x => x.UserId == item.UserId && x.ChatId == item.ChatId);
             if (exists != null) return BadRequest("ChatUser already exits");
-            var resp = await _repository.AddAsync(new ChatUser { ChatId = item.ChatId, UserId = item.UserId, JoinedAt = DateTime.UtcNow});
+            var chatModel = new ChatUser { ChatId = item.ChatId, UserId = item.UserId, JoinedAt = DateTime.UtcNow };
+            var resp = await _repository.AddAsync(chatModel);
 
             // SignalR
             await _hubContext.Clients
-                .Group(item.ChatId.ToString())
-                .SendAsync("AddChatUser", new
-                {
-                    ChatId = item.ChatId,
-                    UserId = item.UserId,
-                    Username = user.Name
-                });
+                .Group($"chat-users-{item.UserId}")
+                .SendAsync("AddChatUser", chat);
 
             return Ok(_mapper.Map<ChatUserDTO>(resp));
         }
@@ -104,13 +100,8 @@ namespace ChatAppAPI.Controllers
 
             // SignalR
             await _hubContext.Clients
-                .Group(item.ChatId.ToString())
-                .SendAsync("RemoveChatUser", new
-                {
-                    ChatId = item.ChatId,
-                    UserId = item.UserId,
-                    Username = user.Name
-                });
+                .Group($"chat-users-{item.UserId}")
+                .SendAsync("RemoveChatUser", chat);
 
             return Ok(result);
         }

@@ -1,5 +1,5 @@
-﻿using ChatAppAPI.Configurations;
-using ChatAppAPI.Data;
+﻿using ChatAppAPI.Data;
+using ChatAppAPI.Hubs;
 using ChatAppAPI.Repository;
 using ChatAppAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,6 +19,7 @@ if (builder.Environment.IsDevelopment())
 
 // Add services
 builder.Services.AddSignalR();
+builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -108,8 +109,7 @@ builder.Services.AddAuthentication(options =>
             var accessToken = context.Request.Query["access_token"];
             var path = context.HttpContext.Request.Path;
 
-            if (!string.IsNullOrEmpty(accessToken) &&
-                path.StartsWithSegments("/chathub"))
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/main-hub"))
             {
                 context.Token = accessToken;
             }
@@ -169,7 +169,7 @@ app.UseAuthorization();
 // Test endpoint
 app.MapGet("/", () => "API is running on Render 🚀");
 
-app.MapHub<ChatHub>("/chathub");
+app.MapHub<MainHub>("/main-hub");
 app.MapControllers();
 
 app.Run();

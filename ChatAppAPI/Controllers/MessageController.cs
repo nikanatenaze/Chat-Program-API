@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ChatAppAPI.Configurations;
+using ChatAppAPI.Hubs;
 using ChatAppAPI.Models;
 using ChatAppAPI.Models.MessageDTO;
 using ChatAppAPI.Repository;
@@ -21,9 +21,9 @@ namespace ChatAppAPI.Controllers
         private readonly IMessageRepository _repository;
         private readonly IChatUserRepository _chatUserRepository;
         private readonly IMapper _mapper;
-        private readonly IHubContext<ChatHub> _hubContext;
+        private readonly IHubContext<MainHub> _hubContext;
 
-        public MessageController(ILogger<MessageController> logger, IMessageRepository repo, IMapper mapper, IChatUserRepository chatUserRepository, IHubContext<ChatHub> hubContext)
+        public MessageController(ILogger<MessageController> logger, IMessageRepository repo, IMapper mapper, IChatUserRepository chatUserRepository, IHubContext<MainHub> hubContext)
         {
             _logger = logger;
             _repository = repo;
@@ -60,7 +60,9 @@ namespace ChatAppAPI.Controllers
             message.CreatedAt = DateTime.UtcNow;
             var result = await _repository.AddAsync(message);
             // SignalR Test
-            await _hubContext.Clients.Group(message.ChatId.ToString())
+
+            Console.WriteLine(123);
+            await _hubContext.Clients.Group($"chat-{message.ChatId}")
             .SendAsync("CreateMessage", result);
 
             return Ok(result);
@@ -79,7 +81,8 @@ namespace ChatAppAPI.Controllers
             message.Content = dto.Content;
             var result = await _repository.UpdateAsync(message);
 
-            await _hubContext.Clients.Group(message.ChatId.ToString())
+            Console.WriteLine(123);
+            await _hubContext.Clients.Group($"chat-{message.ChatId}")
             .SendAsync("EditMessage", result);
             return NoContent();
         }
@@ -96,7 +99,7 @@ namespace ChatAppAPI.Controllers
                 return Forbid("Not allowed");
             var result = await _repository.RemoveAsync(message);
 
-            await _hubContext.Clients.Group(message.ChatId.ToString())
+            await _hubContext.Clients.Group($"chat-{message.ChatId}")
             .SendAsync("RemoveMessage", result);
             return NoContent();
         }

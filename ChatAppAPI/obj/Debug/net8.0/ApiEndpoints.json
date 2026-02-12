@@ -131,7 +131,7 @@
   {
     "ContainingType": "ChatAppAPI.Controllers.ChatController",
     "Method": "GetChatMessages",
-    "RelativePath": "api/Chat/GetChatMessages/{id}",
+    "RelativePath": "api/Chat/GetMessages/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

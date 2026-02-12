@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ChatAppAPI.Models;
 using Microsoft.AspNetCore.SignalR;
 
-namespace ChatAppAPI.Configurations
+namespace ChatAppAPI.Hubs
 {
-    [Authorize]
-    public class ChatHub : Hub
+    public class MainHub : Hub
     {
+        // Baisic operations
         public override async Task OnConnectedAsync()
         {
             string userId = Context.UserIdentifier ?? Context.ConnectionId;
@@ -32,9 +32,38 @@ namespace ChatAppAPI.Configurations
             await Clients.Group(groupName).SendAsync("GroupNotification", $"{Context.ConnectionId} left {groupName}");
         }
 
-        public async Task SendMessageToAll(string message)
+        // Chat operations
+        public async Task JoinChat(int chatId)
         {
-            await Clients.All.SendAsync("ReceiveMessage", message);
+            await Groups.AddToGroupAsync(
+                Context.ConnectionId,
+                $"chat-{chatId}"
+            );
+        }
+
+        public async Task LeaveChat(int chatId)
+        {
+            await Groups.RemoveFromGroupAsync(
+                Context.ConnectionId,
+                $"chat-{chatId}"
+            );
+        }
+
+        // Chat users operations
+        public async Task JoinChatUsers(int userId)
+        {
+            await Groups.AddToGroupAsync(
+                Context.ConnectionId,
+                $"chat-users-{userId}"
+            );
+        }
+
+        public async Task LeaveChatUsers(int userId)
+        {
+            await Groups.RemoveFromGroupAsync(
+                Context.ConnectionId,
+                $"chat-users-{userId}"
+            );
         }
     }
 }
