@@ -34,10 +34,8 @@ namespace ChatAppAPI.Controllers
         public async Task<IActionResult> Login1([FromBody] Models.AuthDTO.LoginRequest request)
         {
             var user = await _repository.GetAsync(x => x.Email == request.Email);
-
             if (user == null) return Unauthorized("User not found");
             if (user.Password != request.Password) return Unauthorized("Invalid password");
-
             var Response = _jwt.Authenticate(user);
 
             return Ok(Response.Result);
@@ -53,6 +51,7 @@ namespace ChatAppAPI.Controllers
             var user = _mapper.Map<User>(request);
             user.CreatedAt = DateTime.UtcNow;
             var result = await _repository.AddAsync(user);
+
             return Ok(result);
         }
     }

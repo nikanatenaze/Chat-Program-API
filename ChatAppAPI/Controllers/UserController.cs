@@ -31,11 +31,10 @@ namespace ChatAppAPI.Controllers
         [HttpGet("GetAll", Name = "GetAllUsers")]
         public async Task<IActionResult> GetAllUsers() {
             var AllUsers = await _repository.GetAllAsync();
-            if (AllUsers == null)
-            {
+            if (AllUsers == null) 
                 return NotFound("Users doesn't found");
-            }
             var Dtos = _mapper.Map<List<UserDTO>>(AllUsers);
+
             return Ok(Dtos);
         }
 
@@ -57,9 +56,10 @@ namespace ChatAppAPI.Controllers
         public async Task<IActionResult> GetUserById(int id)
         {
             var found = await _repository.GetAsync(x => x.Id == id);
-            if (found == null)
+            if (found == null) 
                 return NotFound("Not found user");
             var Dto = _mapper.Map<UserDTO>(found);
+
             return Ok(Dto);
         }
 
@@ -83,7 +83,9 @@ namespace ChatAppAPI.Controllers
             var User = await _repository.GetAsync(x => x.Id == user.Id);
             if (User == null) return NotFound("Account with that Id don't exists");
             if (user.Password != User.Password) return Unauthorized("Wrong password");
+
             await _repository.RemoveAsync(User);
+
             return NoContent();
         }
     }

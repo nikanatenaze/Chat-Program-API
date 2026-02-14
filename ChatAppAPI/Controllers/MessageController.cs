@@ -55,15 +55,16 @@ namespace ChatAppAPI.Controllers
             if (dto == null) return BadRequest("empty prompt");
             if (!await _chatUserRepository.IsUserInChat(dto.UserId, dto.ChatId))
                 return Forbid("you are not a member of this chat");
+
             // adding message
             var message = _mapper.Map<Message>(dto);
             message.CreatedAt = DateTime.UtcNow;
             var result = await _repository.AddAsync(message);
-            // SignalR Test
 
-            Console.WriteLine(123);
-            await _hubContext.Clients.Group($"chat-{message.ChatId}")
-            .SendAsync("CreateMessage", result);
+            // SignalR
+            await _hubContext.Clients
+                .Group($"chat-{message.ChatId}")
+                .SendAsync("CreateMessage", result);
 
             return Ok(result);
         }
@@ -81,9 +82,11 @@ namespace ChatAppAPI.Controllers
             message.Content = dto.Content;
             var result = await _repository.UpdateAsync(message);
 
-            Console.WriteLine(123);
-            await _hubContext.Clients.Group($"chat-{message.ChatId}")
-            .SendAsync("EditMessage", result);
+            // signalR
+            await _hubContext.Clients
+                .Group($"chat-{message.ChatId}")
+                .SendAsync("EditMessage", result);
+                
             return NoContent();
         }
 
@@ -99,8 +102,11 @@ namespace ChatAppAPI.Controllers
                 return Forbid("Not allowed");
             var result = await _repository.RemoveAsync(message);
 
-            await _hubContext.Clients.Group($"chat-{message.ChatId}")
-            .SendAsync("RemoveMessage", result);
+            // signalR
+            await _hubContext.Clients
+                .Group($"chat-{message.ChatId}")
+                .SendAsync("RemoveMessage", result);
+
             return NoContent();
         }
     }

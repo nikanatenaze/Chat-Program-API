@@ -39,6 +39,7 @@ namespace ChatAppAPI.Controllers
         {
             var chatUsers = await _repository.GetAllAsync();
             var result = _mapper.Map<List<ChatUserDTO>>(chatUsers);
+            
             return Ok(result);
         }
 
@@ -49,6 +50,7 @@ namespace ChatAppAPI.Controllers
             var userIds = ids.Select(x => x.UserId).ToList();
             var users = await _userRepository.GetAllAsync(x => userIds.Contains(x.Id));
             var result = _mapper.Map<List<UserDTO>>(users);
+            
             return Ok(result);
         }
 
@@ -59,6 +61,7 @@ namespace ChatAppAPI.Controllers
             var chatIds = ids.Select(x => x.ChatId).ToList();
             var chats = await _chatRepository.GetAllAsync(x => chatIds.Contains(x.Id));
             var result = _mapper.Map<List<ChatDTO>>(chats);
+            
             return Ok(result);
         }
 
@@ -66,6 +69,7 @@ namespace ChatAppAPI.Controllers
         public async Task<IActionResult> IsMember(int chatId, int userId)
         {
             var chatUser = await _repository.GetAsync(x => x.ChatId == chatId && x.UserId == userId);
+            
             return Ok(chatUser != null);
         }
 
@@ -110,6 +114,7 @@ namespace ChatAppAPI.Controllers
         {
             var user = await _userRepository.GetAsync(x => x.Id == userId);
             var chat = await _chatRepository.GetAsync(x => x.Id == chatId);
+
             return (user, chat);
         }
     }
