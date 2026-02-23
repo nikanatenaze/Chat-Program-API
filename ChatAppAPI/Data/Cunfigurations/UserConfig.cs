@@ -13,8 +13,11 @@ namespace ChatAppAPI.Data.Cunfigurations
 
             builder.Property(x => x.Id).UseIdentityColumn(1, 1);
             builder.Property(x => x.Name).IsRequired(true).HasMaxLength(24);
-            builder.Property(x => x.Password).IsRequired(true).HasMaxLength(50);
+            builder.Property(x => x.Password).IsRequired(true).HasMaxLength(100);
             builder.Property(x => x.Email).HasMaxLength(100);
+            builder.Property(x => x.Role)
+                .IsRequired()
+                .HasDefaultValue(Enums.Roles.User);
             builder.Property(x => x.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
 
             builder.HasData(new List<User>

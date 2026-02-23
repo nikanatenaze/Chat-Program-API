@@ -50,6 +50,7 @@ namespace ChatAppAPI.Controllers
             if(!validUser) return BadRequest("User with that email already exits!");
             var user = _mapper.Map<User>(request);
             user.CreatedAt = DateTime.UtcNow;
+            user.Role = Enums.Roles.User;
             var result = await _repository.AddAsync(user);
 
             return Ok(result);

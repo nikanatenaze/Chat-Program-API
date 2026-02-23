@@ -28,6 +28,7 @@ namespace ChatAppAPI.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("GetAll", Name = "GetAllUsers")]
         public async Task<IActionResult> GetAllUsers() {
             var AllUsers = await _repository.GetAllAsync();

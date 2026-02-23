@@ -36,12 +36,13 @@ namespace ChatAppAPI.Services
             var issuer = _config["Jwt:Issuer"];
             var audience = _config["Jwt:Audience"];
             var key = _config["Jwt:Key"];
-            var tokenValidityMins = _config["Jwt:ExpiresInMinutes"];
+            var tokenValidityMins = _config["Jwt:ExpiresInMinutes"] ?? "60";
 
             var claims = new List<Claim> {
                 new Claim(JwtRegisteredClaimNames.Sub, request.Id.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, request.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, request.Email),
+                new Claim(ClaimTypes.Role, request.Role.ToString()),
                 new Claim(ClaimTypes.Name, request.Name),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };

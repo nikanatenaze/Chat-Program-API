@@ -31,6 +31,7 @@ namespace ChatAppAPI.Controllers
             _messageRepository = messageRepository;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("GetAll", Name = "GetAllChats")]
         public async Task<IActionResult> GetAllChats()
         {
@@ -40,7 +41,7 @@ namespace ChatAppAPI.Controllers
             return Ok(Dtos);
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("GetById/{id:int}", Name = "GetChatById")]
         public async Task<IActionResult> GetChatById(int id)
         {
@@ -51,6 +52,7 @@ namespace ChatAppAPI.Controllers
 
             return Ok(Dto);
         }
+
 
         [HttpGet("GetMessages/{id:int}", Name = "GetChatMessages")]
         public async Task<IActionResult> GetChatMessages(int id)

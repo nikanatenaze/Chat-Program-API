@@ -34,6 +34,7 @@ namespace ChatAppAPI.Controllers
             _hubContext = hubContext;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("GetAll", Name = "GetAllChatUsers")]
         public async Task<IActionResult> GetAllChatUsers()
         {

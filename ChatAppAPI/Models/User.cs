@@ -1,4 +1,6 @@
-﻿namespace ChatAppAPI.Models
+﻿using ChatAppAPI.Enums;
+
+namespace ChatAppAPI.Models
 {
     public class User
     {
@@ -6,6 +8,7 @@
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public Roles Role { get; set; }
         public DateTime CreatedAt { get; set; }
 
         // Nav

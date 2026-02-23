@@ -32,6 +32,7 @@ namespace ChatAppAPI.Controllers
             _hubContext = hubContext;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("GetAll", Name = "GetAllMessages")]
         public async Task<IActionResult> GetAllMessages()
         {
