@@ -332,14 +332,14 @@
   {
     "ContainingType": "ChatAppAPI.Controllers.MessageController",
     "Method": "DeleteMessage",
-    "RelativePath": "api/Message/Delete",
+    "RelativePath": "api/Message/delete/{Id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "dto",
-        "Type": "ChatAppAPI.Models.MessageDTO.MessageDeleteDTO",
+        "Name": "Id",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

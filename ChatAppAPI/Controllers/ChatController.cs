@@ -182,8 +182,10 @@ namespace ChatAppAPI.Controllers
         private int GetCurrentUserId()
         {
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (claim == null) throw new UnauthorizedAccessException("User Id claim missing");
-            return int.Parse(claim.Value);
+            if (claim == null || !int.TryParse(claim.Value, out int userId))
+                throw new UnauthorizedAccessException("Invalid User Id");
+
+            return userId;
         }
     }
 }
