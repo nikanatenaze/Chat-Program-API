@@ -2,7 +2,7 @@
 
 namespace ChatAppAPI.Repository
 {
-    public interface IUserReporitory : IChatApiRepository<User>
+    public interface IUserRepository : IChatApiRepository<User>
     {
     }
 }

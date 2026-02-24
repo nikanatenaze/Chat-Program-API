@@ -393,6 +393,22 @@
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.UserController",
+    "Method": "ChangePassword",
+    "RelativePath": "api/User/ChangePassword",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "ChatAppAPI.Models.UserDTO.UserPasswordDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.UserController",
     "Method": "Delete",
     "RelativePath": "api/User/Delete",
     "HttpMethod": "DELETE",
@@ -456,7 +472,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "user",
+        "Name": "dto",
         "Type": "ChatAppAPI.Models.UserDTO.UserUpdateDTO",
         "IsRequired": true
       }

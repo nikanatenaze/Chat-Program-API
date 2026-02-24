@@ -19,12 +19,12 @@ namespace ChatAppAPI.Controllers
     {
         private readonly ILogger<ChatUserController> _logger;
         private readonly IChatUserRepository _repository;
-        private readonly IUserReporitory _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IChatRepository _chatRepository;
         private readonly IHubContext<MainHub> _hubContext;
         private readonly IMapper _mapper;
 
-        public ChatUserController(ILogger<ChatUserController> logger, IChatUserRepository repo, IUserReporitory userRepository, IChatRepository chatRepository, IMapper mapper, IHubContext<MainHub> hubContext)
+        public ChatUserController(ILogger<ChatUserController> logger, IChatUserRepository repo, IUserRepository userRepository, IChatRepository chatRepository, IMapper mapper, IHubContext<MainHub> hubContext)
         {
             _logger = logger;
             _repository = repo;

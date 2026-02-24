@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
-using ChatAppAPI.Data;
 using ChatAppAPI.Models;
 using ChatAppAPI.Models.UserDTO;
 using ChatAppAPI.Repository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace ChatAppAPI.Controllers
@@ -18,10 +15,14 @@ namespace ChatAppAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-        private readonly IUserReporitory _repository;
+        private readonly IUserRepository _repository;
         private readonly IMapper _mapper;
 
-        public UserController(ILogger<UserController> logger, DataContext data, IUserReporitory repo, IMapper mapper)
+        public UserController(
+            ILogger<UserController> logger, 
+            IUserRepository repo,
+            IMapper mapper
+            )
         {
             _logger = logger;
             _repository = repo;
@@ -32,7 +33,7 @@ namespace ChatAppAPI.Controllers
         [HttpGet("GetAll", Name = "GetAllUsers")]
         public async Task<IActionResult> GetAllUsers() {
             var AllUsers = await _repository.GetAllAsync();
-            if (AllUsers == null) 
+            if (!AllUsers.Any()) 
                 return NotFound("Users doesn't found");
             var Dtos = _mapper.Map<List<UserDTO>>(AllUsers);
 
@@ -46,11 +47,12 @@ namespace ChatAppAPI.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var email = User.FindFirstValue(ClaimTypes.Email);
             var name = User.FindFirstValue(ClaimTypes.Name);
+            var role = User.FindFirstValue(ClaimTypes.Role);
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("Invalid token: missing user ID");
 
-            return Ok(new { Id = userId, Name = name, Email = email });
+            return Ok(new { Id = userId, Name = name, Email = email, Role = role});
         }
 
         [HttpGet("GetById/{id:int}", Name = "GetUserById")]
@@ -64,30 +66,75 @@ namespace ChatAppAPI.Controllers
             return Ok(Dto);
         }
 
-        [HttpPatch("Update", Name = "UpdateUser")]
-        public async Task<IActionResult> Update([FromBody] UserUpdateDTO user)
+        [HttpPatch("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] UserPasswordDTO dto)
         {
-            if(user == null) return BadRequest();
-            var User = await _repository.GetAsync(x => x.Id == user.Id);
-            if (User == null) {
-                return NotFound("Cant find user");
-            }
-            var dto = _mapper.Map<User>(user);
-            await _repository.UpdateAsync(dto);
-            return NoContent();
+            if (dto == null) return BadRequest();
+
+            var userId = GetCurrentUserId();
+            var user = await _repository.GetAsync(x => x.Id == userId);
+
+            if (user == null)
+                return NotFound("User not found");
+
+            if (user.Password != dto.CurrentPassword)
+                return Unauthorized("Wrong current password");
+
+            user.Password = dto.NewPassword;
+
+            await _repository.UpdateAsync(user);
+
+            return Ok("Password updated");
+        }
+
+        [HttpPatch("Update", Name = "UpdateUser")]
+        public async Task<IActionResult> Update([FromBody] UserUpdateDTO dto)
+        {
+            if (dto == null) return BadRequest();
+
+            var userId = GetCurrentUserId();
+            var user = await _repository.GetAsync(x => x.Id == userId);
+
+            if (user == null)
+                return NotFound("User not found");
+
+            if (!string.IsNullOrEmpty(dto.Name))
+                user.Name = dto.Name;
+
+            if (!string.IsNullOrEmpty(dto.Email))
+                user.Email = dto.Email;
+
+            var result = await _repository.UpdateAsync(user);
+            var resultDto = _mapper.Map<UserDTO>(result);
+
+            return Ok(resultDto);
         }
 
         [HttpDelete("Delete", Name = "DeleteUser")]
         public async Task<IActionResult> Delete([FromBody] UserDeleteDTO user)
         {
             if (user == null) return BadRequest();
-            var User = await _repository.GetAsync(x => x.Id == user.Id);
+            
+            var userId = GetCurrentUserId();
+            var User = await _repository.GetAsync(x => x.Id == userId);
+
             if (User == null) return NotFound("Account with that Id don't exists");
             if (user.Password != User.Password) return Unauthorized("Wrong password");
 
             await _repository.RemoveAsync(User);
 
             return NoContent();
+        }
+
+        // helper methods
+
+        private int GetCurrentUserId()
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim == null || !int.TryParse(claim.Value, out int userId))
+                throw new UnauthorizedAccessException("Invalid User Id");
+
+            return userId;
         }
     }
 }

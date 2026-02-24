@@ -86,7 +86,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Register repositories
-builder.Services.AddScoped<IUserReporitory, UserRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
 builder.Services.AddScoped<IChatUserRepository, ChatUserRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
@@ -170,7 +170,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Test endpoint
-app.MapGet("/", () => "API is running on Render 🚀");
+app.MapGet("/", () => "API is running 🚀 \nadd '/swagger' to see controllers");
 
 app.MapHub<MainHub>("/main-hub");
 app.MapControllers();

@@ -3,7 +3,7 @@ using ChatAppAPI.Models;
 
 namespace ChatAppAPI.Repository
 {
-    public class UserRepository : ChatApiRepository<User>, IUserReporitory
+    public class UserRepository : ChatApiRepository<User>, IUserRepository
     {
         public UserRepository(DataContext dbContext) : base(dbContext)
         {

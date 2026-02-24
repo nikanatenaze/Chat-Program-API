@@ -19,10 +19,10 @@ namespace ChatAppAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IUserReporitory _repository;
+        private readonly IUserRepository _repository;
         private readonly JwtService _jwt;
 
-        public AuthController(IMapper mapper,IUserReporitory reporitory, JwtService jwt)
+        public AuthController(IMapper mapper,IUserRepository reporitory, JwtService jwt)
         {
             _mapper=mapper;
             _repository = reporitory;

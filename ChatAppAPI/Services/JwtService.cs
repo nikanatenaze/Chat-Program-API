@@ -17,10 +17,10 @@ namespace ChatAppAPI.Services
     public class JwtService
     {
         private readonly IConfiguration _config;
-        private readonly IUserReporitory _reporitory;
+        private readonly IUserRepository _reporitory;
         private readonly IMapper _mapper;
 
-        public JwtService(IConfiguration config, IUserReporitory reporitory, IMapper mapper)
+        public JwtService(IConfiguration config, IUserRepository reporitory, IMapper mapper)
         {
             _reporitory = reporitory;
             _mapper = mapper;

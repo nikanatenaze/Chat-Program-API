@@ -19,7 +19,7 @@ namespace ChatAppAPI.Controllers
     {
         private readonly ILogger<ChatController> _logger;
         private readonly IChatRepository _repository;
-        private readonly IUserReporitory _userReporitory;
+        private readonly IUserRepository _userReporitory;
         private readonly IMessageRepository _messageRepository;
         private readonly IChatUserRepository _chatUserRepository;
         private readonly IMapper _mapper;
@@ -27,7 +27,7 @@ namespace ChatAppAPI.Controllers
         public ChatController(ILogger<ChatController> logger, 
             DataContext data,
             IChatRepository repo,
-            IUserReporitory userReporitory, 
+            IUserRepository userReporitory, 
             IMessageRepository messageRepository,
             IMapper mapper,
             IChatUserRepository chatUserRepository
