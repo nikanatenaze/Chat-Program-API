@@ -1,6 +1,8 @@
 ﻿using ChatAppAPI.Data;
+using ChatAppAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Security.Claims;
 
 namespace ChatAppAPI.Repository
 {

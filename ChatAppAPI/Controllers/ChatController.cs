@@ -7,6 +7,7 @@ using ChatAppAPI.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ChatAppAPI.Controllers
 {
@@ -20,15 +21,24 @@ namespace ChatAppAPI.Controllers
         private readonly IChatRepository _repository;
         private readonly IUserReporitory _userReporitory;
         private readonly IMessageRepository _messageRepository;
+        private readonly IChatUserRepository _chatUserRepository;
         private readonly IMapper _mapper;
 
-        public ChatController(ILogger<ChatController> logger, DataContext data, IChatRepository repo , IUserReporitory userReporitory, IMessageRepository messageRepository,IMapper mapper)
+        public ChatController(ILogger<ChatController> logger, 
+            DataContext data,
+            IChatRepository repo,
+            IUserReporitory userReporitory, 
+            IMessageRepository messageRepository,
+            IMapper mapper,
+            IChatUserRepository chatUserRepository
+            )
         {
             _logger = logger;
             _repository = repo;
             _mapper = mapper;
             _userReporitory = userReporitory;
             _messageRepository = messageRepository;
+            _chatUserRepository = chatUserRepository;
         }
 
         [Authorize(Roles = "Admin")]
@@ -41,13 +51,18 @@ namespace ChatAppAPI.Controllers
             return Ok(Dtos);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("GetById/{id:int}", Name = "GetChatById")]
         public async Task<IActionResult> GetChatById(int id)
         {
+            var userId = GetCurrentUserId();
+            var adminRole = User.IsInRole("Admin");
+            var isMemb = await _chatUserRepository.IsUserInChat(userId, id);
+            if (!isMemb && !adminRole) return Forbid("Your not member of chat!");
+
             var found = await _repository.GetAsync(x => x.Id == id);
             if (found == null)
                 return NotFound("Not found Chat");
+
             var Dto = _mapper.Map<ChatDTO>(found);
 
             return Ok(Dto);
@@ -58,8 +73,14 @@ namespace ChatAppAPI.Controllers
         public async Task<IActionResult> GetChatMessages(int id)
         {
             if (id == 0) return BadRequest("Id can't be null");
+
+            var userId = GetCurrentUserId();
+            var isMemb = await _chatUserRepository.IsUserInChat(userId, id);
+            if (!isMemb) return Forbid("Your not member of chat!");
+
             var chat = await _repository.GetAsync(x => x.Id == id);
             if (chat == null) return NotFound("Can't find chat");
+
             var messages = await _messageRepository.GetAllAsync(x => x.ChatId == id);
 
             return Ok(messages);
@@ -70,13 +91,24 @@ namespace ChatAppAPI.Controllers
         {
             if (create == null)
                 return BadRequest();
-            var user = await _userReporitory.GetAsync(x => x.Id == create.CreatedByUserId);
+
+            var userId = GetCurrentUserId();
+            var user = await _userReporitory.GetAsync(x => x.Id == userId);
             if (user == null) return BadRequest("Cant find user with that Id");
+
             var chat = _mapper.Map<Chat>(create);
+            chat.CreatedByUserId = userId;
             chat.HasPassword = !string.IsNullOrEmpty(create.Password);
             chat.CreatedAt = DateTime.UtcNow;
+
             var result = await _repository.AddAsync(chat);
             var resultDto = _mapper.Map<ChatDTO>(result);
+
+            await _chatUserRepository.AddAsync(new ChatUser
+            {
+                ChatId = result.Id,
+                UserId = userId
+            });
 
             return Ok(resultDto);
         }
@@ -86,8 +118,22 @@ namespace ChatAppAPI.Controllers
         {
             var chat = await _repository.GetAsync(x => x.Id == dto.ChatId);
             if(chat == null) return Unauthorized("cant find chat");
+
             if(!chat.HasPassword) return BadRequest("chat has no password");
+
             if(chat.Password != dto.Password) return Unauthorized("wrong password");
+
+            var userId = GetCurrentUserId();
+            var isMember = await _chatUserRepository.IsUserInChat(userId, chat.Id);
+
+            if (!isMember)
+            {
+                await _chatUserRepository.AddAsync(new ChatUser() { 
+                    ChatId = chat.Id,
+                    UserId = userId,
+                    JoinedAt = DateTime.UtcNow,
+                });
+            }
             var cDto = _mapper.Map<ChatDTO>(chat);
 
             return Ok(cDto);
@@ -97,8 +143,14 @@ namespace ChatAppAPI.Controllers
         public async Task<IActionResult> Update([FromBody] ChatUpdateDTO dto)
         {
             if (dto == null) return BadRequest();
+
+            var userId = GetCurrentUserId();
+            var isCreator = await _repository.IsUserCreator(userId, dto.Id);
+            if (!isCreator) return Forbid("You are not chat owner");
+
             var aChat = await _repository.GetAsync(x => x.Id == dto.Id);
             if (aChat == null) return NotFound();
+
             _mapper.Map(dto, aChat);
             var result = await _repository.UpdateAsync(aChat);
             var resultDto = _mapper.Map<ChatDTO>(result);
@@ -109,11 +161,29 @@ namespace ChatAppAPI.Controllers
         [HttpDelete("DeleteById/{Id:int}", Name = "DeleteChat")]
         public async Task<IActionResult> Delete(int Id)
         {
+
+            if(Id == 0) return BadRequest();
+
+            var userId = GetCurrentUserId();
+
+            var adminRole = User.IsInRole("Admin");
+            var isCreator = await _repository.IsUserCreator(userId, Id);
+            if (!isCreator && !adminRole) return Forbid("You can delete only own chats!");
+
             var chat = await _repository.GetAsync(x => x.Id == Id);
             if (chat == null) return NotFound("Chat with that Id don't exists");
-            var result = await _repository.RemoveAsync(chat);
 
+            var result = await _repository.RemoveAsync(chat);
             return Ok(result);
+        }
+
+        // helper methods
+
+        private int GetCurrentUserId()
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim == null) throw new UnauthorizedAccessException("User Id claim missing");
+            return int.Parse(claim.Value);
         }
     }
 }
