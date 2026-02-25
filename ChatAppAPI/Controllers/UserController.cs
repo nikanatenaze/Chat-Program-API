@@ -4,6 +4,8 @@ using ChatAppAPI.Models.UserDTO;
 using ChatAppAPI.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace ChatAppAPI.Controllers
@@ -33,16 +35,12 @@ namespace ChatAppAPI.Controllers
         [HttpGet("GetAll", Name = "GetAllUsers")]
         public async Task<IActionResult> GetAllUsers() {
             var AllUsers = await _repository.GetAllAsync();
-            if (!AllUsers.Any()) 
-                return NotFound("Users doesn't found");
             var Dtos = _mapper.Map<List<UserDTO>>(AllUsers);
-
             return Ok(Dtos);
         }
 
-        [Authorize]
-        [HttpGet("GetTokenData", Name = "DecodeToken")]
-        public IActionResult GetTokenData()
+        [HttpGet("GetCurrentUserInfo", Name = "GetCurrentUserInfo")]
+        public IActionResult GetCurrentUserInfo()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var email = User.FindFirstValue(ClaimTypes.Email);
@@ -64,6 +62,21 @@ namespace ChatAppAPI.Controllers
             var Dto = _mapper.Map<UserDTO>(found);
 
             return Ok(Dto);
+        }
+
+        [HttpGet("Search/{name}")]
+        public async Task<IActionResult> SearchUserByName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return BadRequest("Search term required");
+
+            var users = await _repository.GetAllAsync(
+                x => 
+                x.Name != null &&
+                EF.Functions.Like(x.Name.ToLower(), $"%{name.ToLower()}%"));
+
+            var usersDto = _mapper.Map<List<UserDTO>>(users);
+            return Ok(usersDto);
         }
 
         [HttpPatch("ChangePassword")]
@@ -102,7 +115,11 @@ namespace ChatAppAPI.Controllers
                 user.Name = dto.Name;
 
             if (!string.IsNullOrEmpty(dto.Email))
+            {
+                if (!new EmailAddressAttribute().IsValid(dto.Email))
+                    return BadRequest("Invalid email");
                 user.Email = dto.Email;
+            }
 
             var result = await _repository.UpdateAsync(user);
             var resultDto = _mapper.Map<UserDTO>(result);

@@ -2,10 +2,8 @@
 using ChatAppAPI.Data;
 using ChatAppAPI.Models;
 using ChatAppAPI.Models.ChatDTO;
-using ChatAppAPI.Models.UserDTO;
 using ChatAppAPI.Repository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 

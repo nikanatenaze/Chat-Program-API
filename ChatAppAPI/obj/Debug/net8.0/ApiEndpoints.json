@@ -164,27 +164,6 @@
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.ChatUserController",
-    "Method": "IsMember",
-    "RelativePath": "api/ChatUser/{chatId}/isMember/{userId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "chatId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ChatAppAPI.Controllers.ChatUserController",
     "Method": "AddChatUser",
     "RelativePath": "api/ChatUser/AddChatUser",
     "HttpMethod": "POST",
@@ -214,30 +193,24 @@
   {
     "ContainingType": "ChatAppAPI.Controllers.ChatUserController",
     "Method": "GetChatsOfUser",
-    "RelativePath": "api/ChatUser/GetChatsOfUser/{Id}",
+    "RelativePath": "api/ChatUser/GetChatsOfUser",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "Id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": [],
     "EndpointName": "GetChatsOfUser"
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.ChatUserController",
     "Method": "GetUsersInChat",
-    "RelativePath": "api/ChatUser/GetUsersInChat/{Id}",
+    "RelativePath": "api/ChatUser/GetUsersInChat/{chatId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "Id",
+        "Name": "chatId",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -454,14 +427,30 @@
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.UserController",
-    "Method": "GetTokenData",
-    "RelativePath": "api/User/GetTokenData",
+    "Method": "GetCurrentUserInfo",
+    "RelativePath": "api/User/GetCurrentUserInfo",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
     "ReturnTypes": [],
-    "EndpointName": "DecodeToken"
+    "EndpointName": "GetCurrentUserInfo"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.UserController",
+    "Method": "SearchUserByName",
+    "RelativePath": "api/User/Search/{name}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "name",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.UserController",

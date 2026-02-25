@@ -80,12 +80,12 @@
         }
       }
     },
-    "/api/User/GetTokenData": {
+    "/api/User/GetCurrentUserInfo": {
       "get": {
         "tags": [
           "2-Users"
         ],
-        "operationId": "DecodeToken",
+        "operationId": "GetCurrentUserInfo",
         "responses": {
           "200": {
             "description": "OK"
@@ -107,6 +107,28 @@
             "schema": {
               "type": "integer",
               "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/User/Search/{name}": {
+      "get": {
+        "tags": [
+          "2-Users"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -406,59 +428,12 @@
         }
       }
     },
-    "/api/ChatUser/GetUsersInChat/{Id}": {
+    "/api/ChatUser/GetUsersInChat/{chatId}": {
       "get": {
         "tags": [
           "4-ChatUser"
         ],
         "operationId": "GetUsersInChat",
-        "parameters": [
-          {
-            "name": "Id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/ChatUser/GetChatsOfUser/{Id}": {
-      "get": {
-        "tags": [
-          "4-ChatUser"
-        ],
-        "operationId": "GetChatsOfUser",
-        "parameters": [
-          {
-            "name": "Id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/ChatUser/{chatId}/isMember/{userId}": {
-      "get": {
-        "tags": [
-          "4-ChatUser"
-        ],
         "parameters": [
           {
             "name": "chatId",
@@ -468,17 +443,21 @@
               "type": "integer",
               "format": "int32"
             }
-          },
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ChatUser/GetChatsOfUser": {
+      "get": {
+        "tags": [
+          "4-ChatUser"
+        ],
+        "operationId": "GetChatsOfUser",
         "responses": {
           "200": {
             "description": "OK"
@@ -911,10 +890,6 @@
             "nullable": true
           },
           "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "password": {
             "type": "string",
             "nullable": true
           }

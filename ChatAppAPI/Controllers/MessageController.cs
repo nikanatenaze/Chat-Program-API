@@ -140,7 +140,7 @@ namespace ChatAppAPI.Controllers
             var result = await _repository.RemoveAsync(message);
 
             // signalR
-            var responseDto = _mapper.Map<MessageDTO>(result);
+            var responseDto = _mapper.Map<MessageDTO>(message);
 
             await _hubContext.Clients
                 .Group($"chat-{message.ChatId}")
