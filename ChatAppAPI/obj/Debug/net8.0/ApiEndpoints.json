@@ -179,6 +179,27 @@
     "EndpointName": "UpdateChat"
   },
   {
+    "ContainingType": "ChatAppAPI.Controllers.ChatController",
+    "Method": "UploadChatImage",
+    "RelativePath": "api/Chat/UploadChatImage",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ChatId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Image",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ChatAppAPI.Controllers.ChatUserController",
     "Method": "AddChatUser",
     "RelativePath": "api/ChatUser/AddChatUser",
@@ -484,5 +505,21 @@
     ],
     "ReturnTypes": [],
     "EndpointName": "UpdateUser"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.UserController",
+    "Method": "UploadProfileImage",
+    "RelativePath": "api/User/UploadProfileImage",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Image",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

@@ -350,3 +350,6 @@ C:\Visual Studio 2022 Projects\ChatApp\Chat-Program-API\ChatAppAPI\obj\Debug\net
 C:\Visual Studio 2022 Projects\ChatApp\Chat-Program-API\ChatAppAPI\obj\Debug\net8.0\ChatAppAPI.pdb
 C:\Visual Studio 2022 Projects\ChatApp\Chat-Program-API\ChatAppAPI\obj\Debug\net8.0\ChatAppAPI.genruntimeconfig.cache
 C:\Visual Studio 2022 Projects\ChatApp\Chat-Program-API\ChatAppAPI\obj\Debug\net8.0\ref\ChatAppAPI.dll
+C:\Visual Studio 2022 Projects\ChatApp\Chat-Program-API\ChatAppAPI\bin\Debug\net8.0\ChatAppAPI.staticwebassets.runtime.json
+C:\Visual Studio 2022 Projects\ChatApp\Chat-Program-API\ChatAppAPI\bin\Debug\net8.0\CloudinaryDotNet.dll
+C:\Visual Studio 2022 Projects\ChatApp\Chat-Program-API\ChatAppAPI\bin\Debug\net8.0\Newtonsoft.Json.dll

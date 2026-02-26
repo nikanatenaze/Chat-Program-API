@@ -2,6 +2,7 @@
 using ChatAppAPI.Models;
 using ChatAppAPI.Models.UserDTO;
 using ChatAppAPI.Repository;
+using ChatAppAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,16 +20,19 @@ namespace ChatAppAPI.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IUserRepository _repository;
         private readonly IMapper _mapper;
+        private readonly CloudinaryService _cloudinary;
 
         public UserController(
             ILogger<UserController> logger, 
             IUserRepository repo,
-            IMapper mapper
+            IMapper mapper,
+            CloudinaryService cloudinary
             )
         {
             _logger = logger;
             _repository = repo;
             _mapper = mapper;
+            _cloudinary = cloudinary;
         }
 
         [Authorize(Roles = "Admin")]
@@ -77,6 +81,28 @@ namespace ChatAppAPI.Controllers
 
             var usersDto = _mapper.Map<List<UserDTO>>(users);
             return Ok(usersDto);
+        }
+
+        [HttpPost("UploadProfileImage")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadProfileImage([FromForm] UserProfileImageDTO dto)
+        {
+            if (dto?.Image == null || dto.Image.Length == 0)
+                return BadRequest("No image uploaded");
+
+            var userId = GetCurrentUserId();
+            var user = await _repository.GetAsync(x => x.Id == userId);
+
+            if (user == null)
+                return NotFound("User not found");
+
+            var imageUrl = await _cloudinary.UploadImageAsync(dto.Image);
+
+            user.ProfileImageUrl = imageUrl;
+
+            await _repository.UpdateAsync(user);
+
+            return Ok(new { ImageUrl = imageUrl });
         }
 
         [HttpPatch("ChangePassword")]

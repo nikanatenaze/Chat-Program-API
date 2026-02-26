@@ -5,6 +5,8 @@ using ChatAppAPI.Models.ChatDTO;
 using ChatAppAPI.Models.ChatUserDTO;
 using ChatAppAPI.Models.UserDTO;
 using ChatAppAPI.Repository;
+using ChatAppAPI.Services;
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -26,7 +28,14 @@ namespace ChatAppAPI.Controllers
         private readonly IHubContext<MainHub> _hubContext;
         private readonly IMapper _mapper;
 
-        public ChatUserController(ILogger<ChatUserController> logger, IChatUserRepository repo, IUserRepository userRepository, IChatRepository chatRepository, IMapper mapper, IHubContext<MainHub> hubContext)
+        public ChatUserController(
+            ILogger<ChatUserController> logger, 
+            IChatUserRepository repo, 
+            IUserRepository userRepository, 
+            IChatRepository chatRepository, 
+            IMapper mapper,
+            IHubContext<MainHub> hubContext
+            )
         {
             _logger = logger;
             _repository = repo;

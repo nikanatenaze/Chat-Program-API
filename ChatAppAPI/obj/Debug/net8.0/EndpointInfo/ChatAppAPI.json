@@ -170,6 +170,38 @@
         }
       }
     },
+    "/api/User/UploadProfileImage": {
+      "post": {
+        "tags": [
+          "2-Users"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Image": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/User/ChangePassword": {
       "patch": {
         "tags": [
@@ -347,6 +379,45 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/ChatCreateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Chat/UploadChatImage": {
+      "post": {
+        "tags": [
+          "3-Chats"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ChatId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "ChatId": {
+                  "style": "form"
+                },
+                "Image": {
+                  "style": "form"
+                }
               }
             }
           }

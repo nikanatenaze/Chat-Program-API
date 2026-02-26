@@ -55,7 +55,8 @@ namespace ChatAppAPI.Controllers
             user.Role = Enums.Roles.User;
             var result = await _repository.AddAsync(user);
 
-            return Ok(result);
+            var dto = _mapper.Map<UserDTO>(result);
+            return Ok(dto);
         }
 
         [HttpPost("refresh")]

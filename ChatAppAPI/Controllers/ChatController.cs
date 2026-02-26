@@ -2,7 +2,9 @@
 using ChatAppAPI.Data;
 using ChatAppAPI.Models;
 using ChatAppAPI.Models.ChatDTO;
+using ChatAppAPI.Models.UserDTO;
 using ChatAppAPI.Repository;
+using ChatAppAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -20,6 +22,7 @@ namespace ChatAppAPI.Controllers
         private readonly IUserRepository _userReporitory;
         private readonly IMessageRepository _messageRepository;
         private readonly IChatUserRepository _chatUserRepository;
+        private readonly CloudinaryService _cloudinary;
         private readonly IMapper _mapper;
 
         public ChatController(ILogger<ChatController> logger, 
@@ -28,7 +31,8 @@ namespace ChatAppAPI.Controllers
             IUserRepository userReporitory, 
             IMessageRepository messageRepository,
             IMapper mapper,
-            IChatUserRepository chatUserRepository
+            IChatUserRepository chatUserRepository,
+            CloudinaryService cloudinary
             )
         {
             _logger = logger;
@@ -37,6 +41,7 @@ namespace ChatAppAPI.Controllers
             _userReporitory = userReporitory;
             _messageRepository = messageRepository;
             _chatUserRepository = chatUserRepository;
+            _cloudinary = cloudinary;
         }
 
         [Authorize(Roles = "Admin")]
@@ -109,6 +114,31 @@ namespace ChatAppAPI.Controllers
             });
 
             return Ok(resultDto);
+        }
+
+        [HttpPost("UploadChatImage")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadChatImage([FromForm] ChatImageDTO dto)
+        {
+            if (dto?.Image == null || dto.Image.Length == 0)
+                return BadRequest("No image uploaded");
+
+            var chat = await _repository.GetAsync(x => x.Id == dto.ChatId);
+            if (chat == null) return NotFound("Chat not found");
+
+            // Optional: authorization check
+            var currentUserId = GetCurrentUserId();
+            var isCreator = await _repository.IsUserCreator(currentUserId, dto.ChatId);
+            if (!isCreator && !User.IsInRole("Admin"))
+                return Forbid("You are not allowed to update this chat image");
+
+            var imageUrl = await _cloudinary.UploadImageAsync(dto.Image);
+
+            chat.ChatImageUrl = imageUrl;
+
+            await _repository.UpdateAsync(chat);
+
+            return Ok(new { ImageUrl = imageUrl });
         }
 
         [HttpPost("ChatVerification", Name = "LoginInChat")]

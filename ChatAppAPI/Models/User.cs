@@ -10,6 +10,7 @@ namespace ChatAppAPI.Models
         public string Password { get; set; }
         public Roles Role { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string? ProfileImageUrl { get; set; }
 
         // Nav
         public ICollection<Chat> ChatsCreated { get; set; }

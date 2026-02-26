@@ -85,6 +85,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Add AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+// adding Cloudinary
+builder.Services.AddScoped<CloudinaryService>();
+
 // Register repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
@@ -165,6 +168,8 @@ if (!app.Environment.IsDevelopment() && port != null)
 // Middleware
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseStaticFiles();
 
 app.UseCors("AllowFrontend");
 app.UseAuthentication();

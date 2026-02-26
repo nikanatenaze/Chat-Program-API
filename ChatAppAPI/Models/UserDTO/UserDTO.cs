@@ -9,5 +9,6 @@ namespace ChatAppAPI.Models.UserDTO
         public string Email { get; set; }
         public Roles Role { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string? ProfileImageUrl { get; set; }
     }
 }
