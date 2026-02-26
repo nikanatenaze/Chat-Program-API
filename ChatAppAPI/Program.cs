@@ -135,12 +135,16 @@ builder.Services.AddAuthentication(options =>
             Encoding.UTF8.GetBytes(jwtSettings["Key"])
         ),
         ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
+
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
+
         RoleClaimType = ClaimTypes.Role,
-        NameClaimType = ClaimTypes.Name
+        NameClaimType = ClaimTypes.Name,
+
+        ClockSkew = TimeSpan.Zero,
     };
 });
 
@@ -148,9 +152,6 @@ builder.Services.AddAuthorization();
 
 // Adding JwtService
 builder.Services.AddScoped<JwtService>();
-
-// Adding Id provider
-builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
 var app = builder.Build();
 

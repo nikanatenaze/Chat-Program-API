@@ -3,6 +3,7 @@ using ChatAppAPI.Data;
 using ChatAppAPI.Models;
 using ChatAppAPI.Models.AuthDTO;
 using ChatAppAPI.Models.AuthModels;
+using ChatAppAPI.Models.TokenModels;
 using ChatAppAPI.Models.UserDTO;
 using ChatAppAPI.Repository;
 using ChatAppAPI.Services;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RefreshRequest = ChatAppAPI.Models.AuthModels.RefreshRequest;
 
 namespace ChatAppAPI.Controllers
 {
@@ -54,6 +56,20 @@ namespace ChatAppAPI.Controllers
             var result = await _repository.AddAsync(user);
 
             return Ok(result);
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] RefreshRequest request)
+        {
+            try
+            {
+                TokenResult tokens = await _jwt.Refresh(request.AccessToken, request.RefreshToken);
+                return Ok(tokens);
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
         }
     }
 }
