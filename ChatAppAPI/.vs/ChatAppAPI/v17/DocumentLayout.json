@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "C:\\Visual Studio 2022 Projects\\ChatApp\\Chat-Program-API\\ChatAppAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9628F573-A368-9CB2-62F5-BBAD93376A6A}|ChatAppAPI.csproj|c:\\visual studio 2022 projects\\chatapp\\chat-program-api\\chatappapi\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9628F573-A368-9CB2-62F5-BBAD93376A6A}|ChatAppAPI.csproj|solutionrelative:controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9628F573-A368-9CB2-62F5-BBAD93376A6A}|ChatAppAPI.csproj|c:\\visual studio 2022 projects\\chatapp\\chat-program-api\\chatappapi\\controllers\\messagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9628F573-A368-9CB2-62F5-BBAD93376A6A}|ChatAppAPI.csproj|solutionrelative:controllers\\messagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9628F573-A368-9CB2-62F5-BBAD93376A6A}|ChatAppAPI.csproj|c:\\visual studio 2022 projects\\chatapp\\chat-program-api\\chatappapi\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9628F573-A368-9CB2-62F5-BBAD93376A6A}|ChatAppAPI.csproj|solutionrelative:controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9628F573-A368-9CB2-62F5-BBAD93376A6A}|ChatAppAPI.csproj|c:\\visual studio 2022 projects\\chatapp\\chat-program-api\\chatappapi\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9628F573-A368-9CB2-62F5-BBAD93376A6A}|ChatAppAPI.csproj|solutionrelative:controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9628F573-A368-9CB2-62F5-BBAD93376A6A}|ChatAppAPI.csproj|c:\\visual studio 2022 projects\\chatapp\\chat-program-api\\chatappapi\\services\\cloudinaryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -42,11 +46,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "MessageController.cs",
+              "DocumentMoniker": "C:\\Visual Studio 2022 Projects\\ChatApp\\Chat-Program-API\\ChatAppAPI\\Controllers\\MessageController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MessageController.cs",
+              "ToolTip": "C:\\Visual Studio 2022 Projects\\ChatApp\\Chat-Program-API\\ChatAppAPI\\Controllers\\MessageController.cs",
+              "RelativeToolTip": "Controllers\\MessageController.cs",
+              "ViewState": "AgIAAGQAAAAAAAAAAAAcwHYAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T13:34:54.096Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "CloudinaryService.cs",
               "DocumentMoniker": "C:\\Visual Studio 2022 Projects\\ChatApp\\Chat-Program-API\\ChatAppAPI\\Services\\CloudinaryService.cs",
               "RelativeDocumentMoniker": "Services\\CloudinaryService.cs",
@@ -54,12 +71,11 @@
               "RelativeToolTip": "Services\\CloudinaryService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-07T22:55:06.66Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-07T22:55:06.66Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Visual Studio 2022 Projects\\ChatApp\\Chat-Program-API\\ChatAppAPI\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -77,14 +93,14 @@
               "RelativeDocumentMoniker": "Controllers\\UserController.cs",
               "ToolTip": "C:\\Visual Studio 2022 Projects\\ChatApp\\Chat-Program-API\\ChatAppAPI\\Controllers\\UserController.cs",
               "RelativeToolTip": "Controllers\\UserController.cs",
-              "ViewState": "AgIAAH0AAAAAAAAAAAAuwJsAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAACUAAAAAAAAAAAAgwJsAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-26T18:07:14.489Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "ChatImageDTO.cs",
               "DocumentMoniker": "C:\\Visual Studio 2022 Projects\\ChatApp\\Chat-Program-API\\ChatAppAPI\\Models\\ChatDTO\\ChatImageDTO.cs",
               "RelativeDocumentMoniker": "Models\\ChatDTO\\ChatImageDTO.cs",
@@ -102,7 +118,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "UserDTO.cs",
               "DocumentMoniker": "C:\\Visual Studio 2022 Projects\\ChatApp\\Chat-Program-API\\ChatAppAPI\\Models\\UserDTO\\UserDTO.cs",
               "RelativeDocumentMoniker": "Models\\UserDTO\\UserDTO.cs",
@@ -114,20 +130,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "ChatController.cs",
               "DocumentMoniker": "C:\\Visual Studio 2022 Projects\\ChatApp\\Chat-Program-API\\ChatAppAPI\\Controllers\\ChatController.cs",
               "RelativeDocumentMoniker": "Controllers\\ChatController.cs",
               "ToolTip": "C:\\Visual Studio 2022 Projects\\ChatApp\\Chat-Program-API\\ChatAppAPI\\Controllers\\ChatController.cs",
               "RelativeToolTip": "Controllers\\ChatController.cs",
-              "ViewState": "AgIAAJ4AAAAAAAAAAAAuwLkAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAMQAAAAAAAAAAAAYwLkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-26T18:12:13.116Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "UserProfileImageDTO.cs",
               "DocumentMoniker": "C:\\Visual Studio 2022 Projects\\ChatApp\\Chat-Program-API\\ChatAppAPI\\Models\\UserDTO\\UserProfileImageDTO.cs",
               "RelativeDocumentMoniker": "Models\\UserDTO\\UserProfileImageDTO.cs",
@@ -139,7 +155,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "ChatUserController.cs",
               "DocumentMoniker": "C:\\Visual Studio 2022 Projects\\ChatApp\\Chat-Program-API\\ChatAppAPI\\Controllers\\ChatUserController.cs",
               "RelativeDocumentMoniker": "Controllers\\ChatUserController.cs",

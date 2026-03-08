@@ -116,7 +116,7 @@ namespace ChatAppAPI.Controllers
             return Ok(responseDto);
         }
 
-        [HttpDelete("delete/{Id:int}", Name = "DeleteMessage")]
+        [HttpDelete("Delete/{Id:int}", Name = "DeleteMessage")]
         public async Task<IActionResult> DeleteMessage(int Id)
         {
             if (Id == 0) return BadRequest("empty prompt");
