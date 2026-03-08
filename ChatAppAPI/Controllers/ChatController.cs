@@ -126,13 +126,12 @@ namespace ChatAppAPI.Controllers
             var chat = await _repository.GetAsync(x => x.Id == dto.ChatId);
             if (chat == null) return NotFound("Chat not found");
 
-            // Optional: authorization check
             var currentUserId = GetCurrentUserId();
             var isCreator = await _repository.IsUserCreator(currentUserId, dto.ChatId);
             if (!isCreator && !User.IsInRole("Admin"))
                 return Forbid("You are not allowed to update this chat image");
 
-            var imageUrl = await _cloudinary.UploadImageAsync(dto.Image);
+            var imageUrl = await _cloudinary.UploadImageAsync(dto.Image, $"chat_{chat.Id}");
 
             chat.ChatImageUrl = imageUrl;
 

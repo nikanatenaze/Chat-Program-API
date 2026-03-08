@@ -16,21 +16,25 @@ namespace ChatAppAPI.Services
             _cloudinary = new Cloudinary(account);
         }
 
-        public async Task<string> UploadImageAsync(IFormFile file)
+        public async Task<string?> UploadImageAsync(IFormFile file, string publicId)
         {
-            if (file.Length == 0) return null;
+            if (file == null || file.Length == 0)
+                return null;
 
             await using var stream = file.OpenReadStream();
 
-            var uploadParams = new ImageUploadParams()
+            var uploadParams = new ImageUploadParams
             {
                 File = new FileDescription(file.FileName, stream),
-                Folder = "profile-images"
+                Folder = "chatapp-images",
+                PublicId = publicId,
+                Overwrite = true
             };
 
             var result = await _cloudinary.UploadAsync(uploadParams);
 
-            return result.SecureUrl.ToString();
+            return result?.SecureUrl?.ToString();
         }
+
     }
 }

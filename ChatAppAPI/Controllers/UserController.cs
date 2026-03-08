@@ -96,7 +96,7 @@ namespace ChatAppAPI.Controllers
             if (user == null)
                 return NotFound("User not found");
 
-            var imageUrl = await _cloudinary.UploadImageAsync(dto.Image);
+            var imageUrl = await _cloudinary.UploadImageAsync(dto.Image, $"user_{userId}");
 
             user.ProfileImageUrl = imageUrl;
 
@@ -151,6 +151,22 @@ namespace ChatAppAPI.Controllers
             var resultDto = _mapper.Map<UserDTO>(result);
 
             return Ok(resultDto);
+        }
+
+        [HttpDelete("RemoveProfilePicture")]
+        public async Task<IActionResult> RemoveProfilePicture()
+        {
+            var userId = GetCurrentUserId();
+            var user = await _repository.GetAsync(x => x.Id == userId);
+
+            if (user == null)
+                return NotFound("User not found");
+
+            user.ProfileImageUrl = null;
+
+            await _repository.UpdateAsync(user);
+
+            return Ok("Profile image removed");
         }
 
         [HttpDelete("Delete", Name = "DeleteUser")]
