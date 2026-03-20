@@ -265,6 +265,18 @@
         }
       }
     },
+    "/api/User/RemoveProfilePicture": {
+      "delete": {
+        "tags": [
+          "2-Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/User/Delete": {
       "delete": {
         "tags": [
@@ -732,7 +744,7 @@
         }
       }
     },
-    "/api/Message/delete/{Id}": {
+    "/api/Message/Delete/{Id}": {
       "delete": {
         "tags": [
           "5-Messages"

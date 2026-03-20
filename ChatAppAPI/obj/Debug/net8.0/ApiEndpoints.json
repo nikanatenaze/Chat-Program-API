@@ -342,7 +342,7 @@
   {
     "ContainingType": "ChatAppAPI.Controllers.MessageController",
     "Method": "DeleteMessage",
-    "RelativePath": "api/Message/delete/{Id}",
+    "RelativePath": "api/Message/Delete/{Id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -472,6 +472,16 @@
     "Parameters": [],
     "ReturnTypes": [],
     "EndpointName": "GetCurrentUserInfo"
+  },
+  {
+    "ContainingType": "ChatAppAPI.Controllers.UserController",
+    "Method": "RemoveProfilePicture",
+    "RelativePath": "api/User/RemoveProfilePicture",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "ChatAppAPI.Controllers.UserController",
