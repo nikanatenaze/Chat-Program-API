@@ -192,13 +192,20 @@ namespace ChatAppAPI.Controllers
             if(Id == 0) return BadRequest();
 
             var userId = GetCurrentUserId();
-
             var adminRole = User.IsInRole("Admin");
             var isCreator = await _repository.IsUserCreator(userId, Id);
             if (!isCreator && !adminRole) return StatusCode(403, "You can delete only own chats!");
 
             var chat = await _repository.GetAsync(x => x.Id == Id);
             if (chat == null) return NotFound("Chat with that Id don't exists");
+
+            var chatUsers = await _chatUserRepository.GetAllAsync(x => x.ChatId == Id);
+            foreach (var cu in chatUsers)
+                await _chatUserRepository.RemoveAsync(cu);
+
+            var messages = await _messageRepository.GetAllAsync(x => x.ChatId == Id);
+            foreach (var msg in messages)
+                await _messageRepository.RemoveAsync(msg);
 
             var result = await _repository.RemoveAsync(chat);
             return Ok(result);
