@@ -66,7 +66,7 @@ namespace ChatAppAPI.Controllers
             var users = await _userRepository.GetAllAsync(x => userIds.Contains(x.Id));
             if (!userIds.Contains(currentId)  && !User.IsInRole("Admin"))
             {
-                return Forbid("You are not in chat");
+                return StatusCode(403, "You are not in chat");
             }
 
             var result = _mapper.Map<List<UserDTO>>(users);
@@ -106,7 +106,7 @@ namespace ChatAppAPI.Controllers
 
             // Authorization check
             if (!memberIds.Contains(currentId) && !User.IsInRole("Admin"))
-                return Forbid("You are not member of this chat!");
+                return StatusCode(403, "You are not member of this chat!");
 
             // Check duplicate
             var exists = await _repository.GetAsync(x => x.UserId == item.UserId && x.ChatId == item.ChatId);
@@ -154,7 +154,7 @@ namespace ChatAppAPI.Controllers
             bool isAdmin = User.IsInRole("Admin");
 
             if (!isSelf && !isAdmin)
-                return Forbid("You are not allowed to remove this user"); 
+                return StatusCode(403, "You are not allowed to remove this user"); 
 
             await _repository.RemoveAsync(targetMembership);
 

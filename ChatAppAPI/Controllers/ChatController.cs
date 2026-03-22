@@ -60,7 +60,7 @@ namespace ChatAppAPI.Controllers
             var userId = GetCurrentUserId();
             var adminRole = User.IsInRole("Admin");
             var isMemb = await _chatUserRepository.IsUserInChat(userId, id);
-            if (!isMemb && !adminRole) return Forbid("Your not member of chat!");
+            if (!isMemb && !adminRole) return StatusCode(403, "Your not member of chat!");
 
             var found = await _repository.GetAsync(x => x.Id == id);
             if (found == null)
@@ -79,7 +79,7 @@ namespace ChatAppAPI.Controllers
 
             var userId = GetCurrentUserId();
             var isMemb = await _chatUserRepository.IsUserInChat(userId, id);
-            if (!isMemb) return Forbid("Your not member of chat!");
+            if (!isMemb) return StatusCode(403, "Your not member of chat!");
 
             var chat = await _repository.GetAsync(x => x.Id == id);
             if (chat == null) return NotFound("Can't find chat");
@@ -173,7 +173,7 @@ namespace ChatAppAPI.Controllers
 
             var userId = GetCurrentUserId();
             var isCreator = await _repository.IsUserCreator(userId, dto.Id);
-            if (!isCreator) return Forbid("You are not chat owner");
+            if (!isCreator) return StatusCode(403, "You are not chat owner");
 
             var aChat = await _repository.GetAsync(x => x.Id == dto.Id);
             if (aChat == null) return NotFound();
@@ -195,7 +195,7 @@ namespace ChatAppAPI.Controllers
 
             var adminRole = User.IsInRole("Admin");
             var isCreator = await _repository.IsUserCreator(userId, Id);
-            if (!isCreator && !adminRole) return Forbid("You can delete only own chats!");
+            if (!isCreator && !adminRole) return StatusCode(403, "You can delete only own chats!");
 
             var chat = await _repository.GetAsync(x => x.Id == Id);
             if (chat == null) return NotFound("Chat with that Id don't exists");

@@ -63,7 +63,7 @@ namespace ChatAppAPI.Controllers
             var userId = GetCurrentUserId();
 
             if (!await _chatUserRepository.IsUserInChat(userId, dto.ChatId) && !admin)
-                return Forbid("you are not a member of this chat");
+                return StatusCode(403, "you are not a member of this chat");
 
             // adding message
             var message = _mapper.Map<Message>(dto);
@@ -97,11 +97,11 @@ namespace ChatAppAPI.Controllers
             {
                 var isMember = await _chatUserRepository.IsUserInChat(userId, message.ChatId);
                 if (!isMember)
-                    return Forbid("Not allowed");
+                    return StatusCode(403, "Not allowed");
             }
 
             if (userId != message.UserId && !admin)
-                return Forbid("You cannot edit someone else's message");
+                return StatusCode(403, "You cannot edit someone else's message");
 
             message.Content = dto.Content;
             var result = await _repository.UpdateAsync(message);
@@ -131,10 +131,10 @@ namespace ChatAppAPI.Controllers
             {
                 var isMember = await _chatUserRepository.IsUserInChat(userId, message.ChatId);
                 if (!isMember)
-                    return Forbid("Not allowed");
+                    return StatusCode(403, "Not allowed");
 
                 if (message.UserId != userId)
-                    return Forbid("You cannot delete someone else's message");
+                    return StatusCode(403, "You cannot delete someone else's message");
             }
 
             var result = await _repository.RemoveAsync(message);
