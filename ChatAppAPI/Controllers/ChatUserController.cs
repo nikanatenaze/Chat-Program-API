@@ -137,28 +137,28 @@ namespace ChatAppAPI.Controllers
 
             var (user, chat) = await GetUserAndChat(item.UserId, item.ChatId);
 
-            if (user == null)
-                return NotFound("User not found");
+            if (user == null) return NotFound("User not found");
+            if (chat == null) return NotFound("Chat not found");
 
-            if (chat == null)
-                return NotFound("Chat not found");
-
-            var targetMembership = await _repository.GetAsync(x => x.UserId == item.UserId && x.ChatId == item.ChatId);
+            var targetMembership = await _repository.GetAsync(
+                x => x.UserId == item.UserId && x.ChatId == item.ChatId
+            );
             if (targetMembership == null)
                 return NotFound("User is not in this chat");
 
-            var callerMembership = await _repository.GetAsync(x => x.UserId == currentUserId && x.ChatId == item.ChatId);
-
-            // Authorization rules
             bool isSelf = item.UserId == currentUserId;
             bool isAdmin = User.IsInRole("Admin");
+            bool isOwner = chat.CreatedByUserId == currentUserId;
 
-            if (!isSelf && !isAdmin)
-                return StatusCode(403, "You are not allowed to remove this user"); 
+            if (!isSelf && !isAdmin && !isOwner)
+                return StatusCode(403, "You are not allowed to remove this user");
+
+            // Prevent owner from being kicked (optional guard)
+            if (chat.CreatedByUserId == item.UserId && !isAdmin)
+                return StatusCode(403, "Cannot kick the chat owner");
 
             await _repository.RemoveAsync(targetMembership);
 
-            // SignalR notify removed user
             await _hubContext.Clients
                 .Group($"chat-users-{item.UserId}")
                 .SendAsync("RemoveChatUser", chat);
